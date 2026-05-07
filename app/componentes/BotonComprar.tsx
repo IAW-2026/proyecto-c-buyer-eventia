@@ -5,14 +5,14 @@ type Props = {
   cantidad: number;
 };
 
-/* export default function BotonComprar({
+ export default function BotonComprar({
   idEvento,cantidad
 }: Props) {
 
   async function comprar() {
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/seller/pedidos`,
+      '/api/seller/pedidos',
     
       {
         method: 'POST',
@@ -34,7 +34,7 @@ type Props = {
 
     //necesito usar esos datos para hacer los post a shipping y payments
    // const respuestaPayment = await fetch('http://localhost:PUERTO_PAYMENTS/payments/nuevaTransaccion', {
-   const respuestaPayment = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/nuevaTransaccion`, {
+   const respuestaPayment = await fetch('/api/payments/nuevaTransaccion', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ type Props = {
       }),
     });
 
-    const respuestaShipping = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipping/nuevaEntrada`, {
+    const respuestaShipping = await fetch('/api/shipping/nuevaEntrada', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,4 +66,4 @@ type Props = {
       Comprar
     </button>
   );
-}*/
+}

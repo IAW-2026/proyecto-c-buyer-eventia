@@ -5,7 +5,7 @@ type Props = {
   cantidad: number;
 };
 
-export default function BotonComprar({
+/* export default function BotonComprar({
   idEvento,cantidad
 }: Props) {
 
@@ -13,6 +13,7 @@ export default function BotonComprar({
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/seller/pedidos`,
+    
       {
         method: 'POST',
 
@@ -65,4 +66,4 @@ export default function BotonComprar({
       Comprar
     </button>
   );
-}
+}*/

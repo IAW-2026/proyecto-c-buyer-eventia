@@ -1,6 +1,8 @@
 'use client';
 
-import BotonComprar from './BotonComprar';
+
+import styles from './EventoCard.module.css';
+import Link from 'next/link';
 
 //Evento es un tipo que describe la forma del objeto evento que recibo como prop. 
 type Evento = {
@@ -20,17 +22,27 @@ type Props = {
 // Espera recibir un prop "evento" que es un objeto con las propiedades definidas en el tipo Evento.
 export default function EventoCard({ evento }: Props) {
   return (
-    <div>
-      <h2>{evento.nombre}</h2>
-      <p>{evento.descripcion}</p>
-      <p>{evento.fecha}</p>
-      <p>{evento.ubicacion}</p>
-      <p>${evento.precio}</p>
-      <p>Stock: {evento.stock}</p>
-      <BotonComprar
-        idEvento={evento.idEvento}
-        cantidad={2}
-      />
-    </div>
+    <article className={styles.card}>
+      <header className={styles.header}>
+        <h2 className={styles.title}>{evento.nombre}</h2>
+      </header>
+
+      <div className={styles.meta}>
+        <span className={styles.date}>{evento.fecha}</span>
+        <span className={styles.location}>{evento.ubicacion}</span>
+      </div>
+
+      <div className={styles.footer}>
+        <div className={styles.priceStock}>
+          <span className={styles.price}>${evento.precio}</span>
+        </div>
+
+        <div className={styles.buttonWrapper}>
+          <Link href={`/eventos/${evento.idEvento}`}>
+           Ver evento
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }

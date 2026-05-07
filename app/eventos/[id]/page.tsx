@@ -19,7 +19,7 @@ type Evento = {
 
 async function getEvento(id: string) {
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
   const res = await fetch(
     `${baseUrl}/api/seller/eventos/${id}`,

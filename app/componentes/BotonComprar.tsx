@@ -11,7 +11,7 @@ type Props = {
 
   async function comprar() {
 
-    const response = await fetch(
+    const respuestaSeller = await fetch(
       '/api/seller/pedidos',
     
       {
@@ -28,7 +28,7 @@ type Props = {
       }
     );
 
-    const data = await response.json();
+    const data = await respuestaSeller.json();
     const { idPedido, monto } = data;
     alert(`Pedido creado: ${idPedido} y monto: ${monto} `);
 
@@ -43,6 +43,22 @@ type Props = {
         idPedido,
       }),
     });
+    const paymentData = await respuestaPayment.json();
+    const { idTransaccion } = paymentData;
+     alert(`Transacción creada: ${idTransaccion} `);
+    
+    // Ahora que tengo el idTransaccion, puedo hacer el POST a compras para guardar la compra en la base de datos
+    const respuestaCompra = await fetch('/api/compras', {
+      method: 'POST',
+      headers: {      'Content-Type': 'application/json',               
+      },
+      body: JSON.stringify({
+        idUsuario: 1, 
+        idPedido,
+        idTransaccion,  
+      }),
+    }); 
+    if (respuestaCompra.status === 201) {alert('Compra guardada en la base de datos');}
 
     const respuestaShipping = await fetch('/api/shipping/nuevaEntrada', {
       method: 'POST',

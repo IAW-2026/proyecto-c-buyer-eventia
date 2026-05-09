@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model compras {
+  id_pedido      Int       @id
+  id_usuario     Int?
+  id_transaccion Int?
+  usuarios       usuarios? @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "id_usuario")
+}
+
+model usuarios {
+  id_usuario     Int       @id @default(autoincrement())
+  nombre_usuario String
+  mail           String    @unique
+  compras        compras[]
+}

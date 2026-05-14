@@ -22,27 +22,42 @@ type Props = {
 // Espera recibir un prop "evento" que es un objeto con las propiedades definidas en el tipo Evento.
 export default function EventoCard({ evento }: Props) {
   return (
-    <article className={styles.card}>
-      <header className={styles.header}>
-        <h2 className={styles.title}>{evento.nombre}</h2>
-      </header>
-
-      <div className={styles.meta}>
-        <span className={styles.date}>{evento.fecha}</span>
-        <span className={styles.location}>{evento.ubicacion}</span>
+     <div className="w-full max-w-xs overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex h-44 items-center justify-center bg-slate-300 text-slate-600">
+        Image cap
       </div>
 
-      <div className={styles.footer}>
-        <div className={styles.priceStock}>
-          <span className={styles.price}>${evento.precio}</span>
-        </div>
+      <div className="p-4">
+        <h3 className="mb-2 text-lg font-semibold text-slate-900">
+          {evento.nombre ?? 'Sin nombre'}
+        </h3>
 
-        <div className={styles.buttonWrapper}>
-          <Link href={`/eventos/${evento.idEvento}`}>
-           Ver evento
-          </Link>
-        </div>
+        <p className="text-sm text-slate-600">
+          {evento.descripcion ?? 'Sin descripción'}
+        </p>
       </div>
-    </article>
+
+      <ul className="border-t border-slate-200">
+        <li className="border-b border-slate-200 px-4 py-2 text-sm">
+          {evento.ubicacion ?? 'Sin ubicación'}
+        </li>
+        <li className="border-b border-slate-200 px-4 py-2 text-sm">
+          {evento.fecha ? new Date(evento.fecha).toLocaleString() : 'Sin fecha'}
+        </li>
+      </ul>
+        <ul className="border-t border-slate-200">
+        <li className="border-b border-slate-200 px-4 py-2 text-sm">
+         Entrada: ${evento.precio ?? 'Sin precio'}
+        </li>
+      </ul>
+       <div className="flex justify-center gap-2 p-4">
+        <div className="card-body">
+    <Link  href={`/eventos/${evento.idEvento}`} className="card-link">Ver evento</Link>
+         </div>
+        </div>
+      
+</div>
   );
 }
+
+

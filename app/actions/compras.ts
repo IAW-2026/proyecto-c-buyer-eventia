@@ -27,9 +27,9 @@ export async function comprar({
         }),
       }
     );
-     //if (!respuestaSeller.ok) {
-    // throw new Error('Error creando pedido');
-     //}
+    if (!respuestaSeller.ok) {
+    throw new Error('Error creando pedido');
+  }
     const data = await respuestaSeller.json();
     const { idPedido, monto } = data;
    // alert(`Pedido creado: ${idPedido} y monto: ${monto} `);
@@ -45,9 +45,9 @@ export async function comprar({
         idPedido,
       }),
     });
-     // if (!respuestaPayment.ok) {
-    //throw new Error('Error creando transacción');
-     // }
+    if (!respuestaPayment.ok) {
+    throw new Error('Error creando transacción');
+      }
     const paymentData = await respuestaPayment.json();
     const { idTransaccion } = paymentData;
     
@@ -74,9 +74,9 @@ export async function comprar({
         idPedido,
       }),
     });
-    //if (!respuestaShipping.ok) {
-   // throw new Error('Error creando shipping');
-   // }
+    if (!respuestaShipping.ok) {
+    throw new Error('Error creando shipping');
+}
 
     //if (respuestaPayment.status === 201 && respuestaShipping.status === 201) 
     return {

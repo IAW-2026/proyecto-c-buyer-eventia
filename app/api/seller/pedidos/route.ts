@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
-    idPedido: Math.floor(Math.random() * 1000),
+    idPedido: Math.floor(Math.random() * 1000)+1,
     monto: evento.precio * cantidad,
   });
 }

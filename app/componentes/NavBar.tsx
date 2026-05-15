@@ -1,5 +1,7 @@
+"use client"; 
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, SignInButton } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import styles from "./NavBar.module.css";
 
 const links = [
@@ -9,6 +11,7 @@ const links = [
 ];
 
 export default function NavBar() {
+	 const { isSignedIn } = useAuth();
 	return (
 		<header className={styles.navbar}>
 			<div className={styles.brand}>
@@ -25,7 +28,11 @@ export default function NavBar() {
 				))}
 			</nav>
         <div className={styles.userButton}>
-          <UserButton />
+           {isSignedIn ? (
+            <UserButton />
+          ) : (
+            <SignInButton mode="modal" />
+          )}
          </div>
 		</header>
 	);

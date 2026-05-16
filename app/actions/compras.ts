@@ -9,7 +9,30 @@ export async function comprar({
   idEvento,
   cantidad,
 }: ComprarArgs) {
+    //control de cantidad para evitar que se hagan pedidos con cantidades no válidas
+     if (!Number.isInteger(cantidad) || cantidad <= 0) {
+    throw new Error('Cantidad inválida');
+    }
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    
+    //verificar que hay stock suficiente para la cantidad que se quiere comprar, hago un fetch a seller.
+    const eventoResponse = await fetch(
+    `${baseUrl}/api/seller/eventos/${idEvento}`,
+    {
+      cache: 'no-store',
+    }
+  );
+
+  if (!eventoResponse.ok) {
+    throw new Error('Evento no encontrado');
+  }
+
+  const evento = await eventoResponse.json();
+
+  if (cantidad > evento.stock) {
+    throw new Error('Stock insuficiente');
+  }
+
     //hago el POST a seller para crear el pedido
     const respuestaSeller = await fetch(
       `${baseUrl}/api/seller/pedidos`,

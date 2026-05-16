@@ -82,7 +82,7 @@ export async function comprar({
       data: {
         id_pedido: Number(idPedido),
         id_usuario: 1, // ID de usuario fijo provisional
-        id_transaccion: idTransaccion ? Number(idTransaccion) : null,
+        id_transaccion: Number(idTransaccion) ,
       },
     });
     console.log('Compra guardada directamente desde el Server Action:', compraGuardada);

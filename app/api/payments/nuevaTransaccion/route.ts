@@ -8,9 +8,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'idPedido es requerido' }, { status: 400 });
     }
     //genera un idTransaccion simulado, luego lo obtendria de la app payments
-    const idTransaccion = Math.floor(Math.random() * 900000) + 100000;
+    const numAleatorio = Math.floor(Math.random() * 900000) + 100000;
 
-    return NextResponse.json({ message: 'Transacción creada', idTransaccion }, { status: 201 });
+    return NextResponse.json({ message: 'Transacción creada', idTransaccion: numAleatorio }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Body inválido' }, { status: 400 });

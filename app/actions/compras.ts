@@ -74,8 +74,10 @@ export async function comprar({
     throw new Error('Error creando transacción');
       }
     const paymentData = await respuestaPayment.json();
-    console.log('PAYMENT DATA:');
-    console.log(paymentData);
+    if (!paymentData || !paymentData.idTransaccion) {
+      console.error("El endpoint de pagos no devolvió un idTransaccion válido. Respuesta recibida:", paymentData);
+      throw new Error('idTransaccion no fue generado por el servidor de pagos');
+    }
 
     const { idTransaccion } = paymentData;
     

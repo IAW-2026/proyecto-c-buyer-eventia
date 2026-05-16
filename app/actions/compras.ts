@@ -6,14 +6,16 @@ type ComprarArgs = {
   idEvento: number;
   cantidad: number;
 };
-   const baseUrl = process.env.VERCEL_URL 
-  ? `https://${process.env.VERCEL_URL}` 
-  : (process.env.SITE_URL ?? 'http://localhost:3000');
+ 
 
 export async function comprar({
   idEvento,
   cantidad,
 }: ComprarArgs) {
+     const baseUrl = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : (process.env.SITE_URL ?? 'http://localhost:3000');
+    
     //control de cantidad para evitar que se hagan pedidos con cantidades no válidas
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');

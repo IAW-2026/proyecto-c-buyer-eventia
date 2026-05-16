@@ -1,7 +1,4 @@
 'use client';
-
-
-import styles from './EventoCard.module.css';
 import Link from 'next/link';
 
 //Evento es un tipo que describe la forma del objeto evento que recibo como prop. 

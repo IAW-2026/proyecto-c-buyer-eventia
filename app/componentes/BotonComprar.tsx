@@ -1,85 +1,58 @@
 'use client';
+import { useState } from 'react';
+import { comprar } from '../actions/compras';
 
 type Props = {
   idEvento: number;
-  cantidad: number;
+  stock: number;
 };
 
  export default function BotonComprar({
-  idEvento,cantidad
+  idEvento,stock
 }: Props) {
+   const [cantidad, setCantidad] = useState(1);
+  async function handleComprar() {
+    try {
+      const resultado = await comprar({idEvento,cantidad,});
 
-  async function comprar() {
+      alert(`Pedido: ${resultado.idPedido} Transacción: ${resultado.idTransaccion}`);
 
-    const respuestaSeller = await fetch(
-      '/api/seller/pedidos',
-    
-      {
-        method: 'POST',
+    } catch (error) {
+     console.error(error);
 
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        body: JSON.stringify({
-          idEvento,
-          cantidad,
-        }),
-      }
-    );
-
-    const data = await respuestaSeller.json();
-    const { idPedido, monto } = data;
-    alert(`Pedido creado: ${idPedido} y monto: ${monto} `);
-
-    //necesito usar esos datos para hacer los post a shipping y payments
-   // const respuestaPayment = await fetch('http://localhost:PUERTO_PAYMENTS/payments/nuevaTransaccion', {
-   const respuestaPayment = await fetch('/api/payments/nuevaTransaccion', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        idPedido,
-      }),
-    });
-    const paymentData = await respuestaPayment.json();
-    const { idTransaccion } = paymentData;
-     alert(`Transacción creada: ${idTransaccion} `);
-    
-    // Ahora que tengo el idTransaccion, puedo hacer el POST a compras para guardar la compra en la base de datos
-    const respuestaCompra = await fetch('/api/compras', {
-      method: 'POST',
-      headers: {      'Content-Type': 'application/json',               
-      },
-      body: JSON.stringify({
-        idUsuario: 1, 
-        idPedido,
-        idTransaccion,  
-      }),
-    }); 
-    if (respuestaCompra.status === 201) {alert('Compra guardada en la base de datos');}
-
-    const respuestaShipping = await fetch('/api/shipping/nuevaEntrada', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        idPedido,
-      }),
-    });
-
-    if (respuestaPayment.status === 201 && respuestaShipping.status === 201) {
-      alert(`se creo nueva transacción ynueva entrada de shipping para el pedido ${idPedido}`);
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert('Error desconocido');
     }
-    else {      alert(`Hubo un error al crear la transaccion o la entrada de shipping para el pedido ${idPedido}`);
     }
-  }
+  } 
 
   return (
-    <button onClick={comprar}>
+    <div> 
+     <label>Cantidad de entradas:</label>
+
+      <input
+        type="number"
+        min={1}
+        max={stock}
+        value={cantidad}
+        onChange={(e) =>
+          setCantidad(Number(e.target.value))
+        }
+      />
+    <button onClick={handleComprar} className="
+      rounded-lg
+      border
+      border-slate-300
+      bg-slate-900
+      px-4
+      py-2
+      text-white
+      transition
+      hover:bg-slate-700 " >
       Comprar
     </button>
+    </div>
   );
 }

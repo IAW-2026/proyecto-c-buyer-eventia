@@ -18,7 +18,13 @@ type Props = {
       alert(`Pedido: ${resultado.idPedido} Transacción: ${resultado.idTransaccion}`);
 
     } catch (error) {
-      alert('Hubo un error en la compra');
+     console.error(error);
+
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert('Error desconocido');
+    }
     }
   } 
 

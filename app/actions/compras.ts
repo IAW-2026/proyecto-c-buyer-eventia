@@ -70,17 +70,20 @@ export async function comprar({
         idPedido,
       }),
     });
-    if (!respuestaPayment.ok) {
-    throw new Error('Error creando transacción');
-      }
-    const paymentData = await respuestaPayment.json();
-    if (!paymentData || !paymentData.idTransaccion) {
-      console.error("El endpoint de pagos no devolvió un idTransaccion válido. Respuesta recibida:", paymentData);
-      throw new Error('idTransaccion no fue generado por el servidor de pagos');
-    }
+    //if (!respuestaPayment.ok) {
+    //throw new Error('Error creando transacción');
+    //  }
 
+    const paymentData = await respuestaPayment.json();
+    console.log('PAYMENT DATA:', paymentData);
     const { idTransaccion } = paymentData;
-    
+    console.log('ID TRANSACCION:', idTransaccion);
+    //temporalmente 
+    if (!idTransaccion) {
+     throw new Error(
+    `idTransaccion inválido: ${JSON.stringify(paymentData)}`
+    );
+}
     // Ahora que tengo el idTransaccion, puedo guardar la compra en la base de datos. 
     try {
     const compraGuardada = await prisma.compras.create({

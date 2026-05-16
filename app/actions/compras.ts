@@ -6,6 +6,9 @@ type ComprarArgs = {
   idEvento: number;
   cantidad: number;
 };
+const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 export async function comprar({
   idEvento,
@@ -15,7 +18,6 @@ export async function comprar({
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');
     }
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
     
     //verificar que hay stock suficiente para la cantidad que se quiere comprar, hago un fetch a seller.
     const eventoResponse = await fetch(

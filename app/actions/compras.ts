@@ -1,5 +1,7 @@
 'use server';
 
+import { prisma } from "@/lib/prisma";
+
 type ComprarArgs = {
   idEvento: number;
   cantidad: number;
@@ -75,19 +77,20 @@ export async function comprar({
     const { idTransaccion } = paymentData;
     
     // Ahora que tengo el idTransaccion, puedo guardar la compra en la base de datos. 
-   /* const respuestaCompra = await fetch(`${baseUrl}/api/compras`, {
-      method: 'POST',
-      headers: {      'Content-Type': 'application/json',               
+    try {
+    const compraGuardada = await prisma.compras.create({
+      data: {
+        id_pedido: Number(idPedido),
+        id_usuario: 1, // ID de usuario fijo provisional
+        id_transaccion: idTransaccion ? Number(idTransaccion) : null,
       },
-      body: JSON.stringify({
-        idUsuario: 1, 
-        idPedido,
-        idTransaccion,  
-      }),
-    }); 
-    if (respuestaCompra.status === 201) {alert('Compra guardada en la base de datos');}
-    */
-
+    });
+    console.log('Compra guardada directamente desde el Server Action:', compraGuardada);
+  } catch (error) {
+    console.error('Error al guardar en BD:', error);
+    throw new Error('No se pudo registrar la compra en la base de datos');
+  }
+    
     const respuestaShipping = await fetch(`${baseUrl}/api/shipping/nuevaEntrada`, {
       method: 'POST',
       headers: {

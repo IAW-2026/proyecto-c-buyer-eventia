@@ -74,6 +74,9 @@ export async function comprar({
     throw new Error('Error creando transacción');
       }
     const paymentData = await respuestaPayment.json();
+    console.log('PAYMENT DATA:');
+    console.log(paymentData);
+
     const { idTransaccion } = paymentData;
     
     // Ahora que tengo el idTransaccion, puedo guardar la compra en la base de datos. 

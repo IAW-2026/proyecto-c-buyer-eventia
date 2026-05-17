@@ -1,6 +1,8 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
+import { get } from "http";
+import { getOrCreateUser } from "./usuarios";
 
 type ComprarArgs = {
   idEvento: number;
@@ -15,6 +17,9 @@ export async function comprar({
      const baseUrl = process.env.VERCEL_URL 
     ? `https://${process.env.VERCEL_URL}` 
     : (process.env.SITE_URL ?? 'http://localhost:3000');
+
+    //obtener y asegurar el usuario en la BD
+    const usuario = await getOrCreateUser();
     
     //control de cantidad para evitar que se hagan pedidos con cantidades no válidas
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
@@ -93,7 +98,7 @@ export async function comprar({
     const compraGuardada = await prisma.compras.create({
       data: {
         id_pedido: Number(idPedido),
-        id_usuario: 1, // ID de usuario fijo provisional
+        id_usuario:  usuario.id_usuario,
         id_transaccion: Number(idTransaccion) ,
       },
     });

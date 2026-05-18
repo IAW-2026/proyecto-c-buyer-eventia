@@ -14,9 +14,10 @@ export async function comprar({
   idEvento,
   cantidad,
 }: ComprarArgs) {
-     const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : (process.env.SITE_URL ?? 'http://localhost:3000');
+    //url de seller, payments y shipping
+     const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000';
+     const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000';
+     const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000';
 
     //obtener y asegurar el usuario en la BD
     const usuario = await getOrCreateUser();
@@ -28,7 +29,7 @@ export async function comprar({
     
     //verificar que hay stock suficiente para la cantidad que se quiere comprar, hago un fetch a seller.
     const eventoResponse = await fetch(
-    `${baseUrl}/api/seller/eventos/${idEvento}`,
+    `${sellerUrl}/api/seller/eventos/${idEvento}`,
     {
       cache: 'no-store',
     }
@@ -46,7 +47,7 @@ export async function comprar({
 
     //hago el POST a seller para crear el pedido
     const respuestaSeller = await fetch(
-      `${baseUrl}/api/seller/pedidos`,
+      `${sellerUrl}/api/seller/pedidos`,
     
       {
         method: 'POST',
@@ -70,7 +71,7 @@ export async function comprar({
 
     //necesito usar esos datos para hacer los post a shipping y payments
     //hago POST a payments para crear la transacción
-   const respuestaPayment = await fetch(`${baseUrl}/api/payments/nuevaTransaccion`, {
+   const respuestaPayment = await fetch(`${paymentsUrl}/api/payments/nuevaTransaccion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,7 +109,7 @@ export async function comprar({
     throw new Error('No se pudo registrar la compra en la base de datos');
   }
     
-    const respuestaShipping = await fetch(`${baseUrl}/api/shipping/nuevaEntrada`, {
+    const respuestaShipping = await fetch(`${shippingUrl}/api/shipping/nuevaEntrada`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -120,8 +121,6 @@ export async function comprar({
     if (!respuestaShipping.ok) {
     throw new Error('Error creando shipping');
 }
-
-    //if (respuestaPayment.status === 201 && respuestaShipping.status === 201) 
     return {
     ok: true,
     idPedido,

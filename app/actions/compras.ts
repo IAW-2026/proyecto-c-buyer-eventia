@@ -14,7 +14,7 @@ export async function comprar({
   idEvento,
   cantidad,
 }: ComprarArgs) {
-    //url de seller, payments y shipping
+    //url de seller, payments y shipping para apis 
      const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000';
      const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000';
      const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000';

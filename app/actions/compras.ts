@@ -26,24 +26,6 @@ export async function comprar({
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');
     }
-    
-    //verificar que hay stock suficiente para la cantidad que se quiere comprar, hago un fetch a seller.
-    const eventoResponse = await fetch(
-    `${sellerUrl}/api/seller/eventos/${idEvento}`,
-    {
-      cache: 'no-store',
-    }
-  );
-
-  if (!eventoResponse.ok) {
-    throw new Error('Evento no encontrado');
-  }
-
-  const evento = await eventoResponse.json();
-
-  if (cantidad > evento.stock) {
-    throw new Error('Stock insuficiente');
-  }
 
     //hago el POST a seller para crear el pedido
     const respuestaSeller = await fetch(

@@ -15,9 +15,9 @@ export async function comprar({
   cantidad,
 }: ComprarArgs) {
     //url de seller, payments y shipping para apis 
-     const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000';
-     const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000';
-     const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000';
+     const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000/';
+     const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000/';
+     const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000/';
 
     //obtener y asegurar el usuario en la BD
     const usuario = await getOrCreateUser();
@@ -26,28 +26,10 @@ export async function comprar({
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');
     }
-    
-    //verificar que hay stock suficiente para la cantidad que se quiere comprar, hago un fetch a seller.
-    const eventoResponse = await fetch(
-    `${sellerUrl}/api/seller/eventos/${idEvento}`,
-    {
-      cache: 'no-store',
-    }
-  );
-
-  if (!eventoResponse.ok) {
-    throw new Error('Evento no encontrado');
-  }
-
-  const evento = await eventoResponse.json();
-
-  if (cantidad > evento.stock) {
-    throw new Error('Stock insuficiente');
-  }
 
     //hago el POST a seller para crear el pedido
     const respuestaSeller = await fetch(
-      `${sellerUrl}/api/seller/pedidos`,
+      `${sellerUrl}api/seller/pedidos`,
     
       {
         method: 'POST',
@@ -71,7 +53,7 @@ export async function comprar({
 
     //necesito usar esos datos para hacer los post a shipping y payments
     //hago POST a payments para crear la transacción
-   const respuestaPayment = await fetch(`${paymentsUrl}/api/payments/nuevaTransaccion`, {
+   const respuestaPayment = await fetch(`${paymentsUrl}api/payments/nuevaTransaccion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +91,7 @@ export async function comprar({
     throw new Error('No se pudo registrar la compra en la base de datos');
   }
     
-    const respuestaShipping = await fetch(`${shippingUrl}/api/shipping/nuevaEntrada`, {
+    const respuestaShipping = await fetch(`${shippingUrl}api/shipping/nuevaEntrada`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -2,6 +2,7 @@
 "use server";
 import { clerkClient } from "@clerk/nextjs/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import {prisma} from "@/lib/prisma";
 
 export async function getOrCreateUser() {
@@ -9,7 +10,7 @@ export async function getOrCreateUser() {
   const { userId } = await auth();
 
   if (!userId) {
-    throw new Error("No autorizado");
+   redirect("/sign-in");
   }
 
   // buscar en la bd si ya existe un usuario con ese id_usuario (que es el id de Clerk)

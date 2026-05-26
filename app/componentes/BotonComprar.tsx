@@ -21,6 +21,8 @@ type Props = {
      console.error(error);
 
     if (error instanceof Error) {
+      if (error.message === "NEXT_REDIRECT") {
+      throw error; }
       alert(error.message);
     } else {
       alert('Error desconocido');

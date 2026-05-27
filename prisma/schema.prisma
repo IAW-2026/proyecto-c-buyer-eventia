@@ -8,8 +8,9 @@ datasource db {
 
 model compras {
   id_pedido      Int       @id
-  id_usuario     String?
-  id_transaccion Int?
+  id_usuario     String   
+  id_evento      Int   
+  cantidad       Int
   usuarios       usuarios? @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "id_usuario")
 }
 

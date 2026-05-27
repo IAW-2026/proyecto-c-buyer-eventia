@@ -82,7 +82,8 @@ export async function comprar({
       data: {
         id_pedido: Number(idPedido),
         id_usuario:  usuario.id_usuario,
-        id_transaccion: Number(idTransaccion) ,
+        cantidad: cantidad,
+        id_evento: idEvento,
       },
     });
     console.log('Compra guardada directamente desde el Server Action:', compraGuardada);

@@ -10,7 +10,7 @@ const links = [
 	{ href: "/mis-eventos", label: "Mis eventos" },
 ];
 
-export default function NavBar() {
+export default function NavBar({ esAdmin }: { esAdmin: boolean }) {
 	 const { isSignedIn } = useAuth();
 	return (
 		<header className={styles.navbar}>
@@ -26,6 +26,12 @@ export default function NavBar() {
 						{link.label}
 					</Link>
 				))}
+
+			{esAdmin && (
+			<Link href="/admin" className={styles.link}>
+				Panel Administrador
+			</Link>
+			)}
 			</nav>
         <div className={styles.userButton}>
            {isSignedIn ? (

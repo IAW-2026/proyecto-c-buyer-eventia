@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma'; 
 import { isAdminBuyer } from '@/lib/admin';
 import AdminTablaCompras from '@/app/componentes/AdminTablaCompras';
+import Paginacion from '@/app/componentes/Paginacion';
 
 
 type EventoSeller = {
@@ -31,31 +32,51 @@ async function fetchInfoEvento(idEvento: number): Promise<EventoSeller | null> {
     return null;
   }
 }
-
-export default async function ComprasPage() {
+//  propiedades de la página para aceptar los searchParams de Next.js
+interface PageProps {
+  searchParams: Promise<{ search?: string; page?: string }>;
+}
+export default async function ComprasPage({ searchParams }: PageProps) {
   // Doble verificación de seguridad en el servidor
   const admin = await isAdminBuyer();
   if (!admin) {
     redirect("/");
   }
-  // Buscar en la bd todas las compras incluyendo los datos del usuario
+
+  // Extraer los parámetros de búsqueda y paginación de la URL
+  const params = await searchParams;
+  const filtro = params.search || "";
+  const pagina = Number(params.page) || 1;
+  const comprasPorPagina = 6; // Cantidad de filas por página
+
+  // Crear la condición de filtrado común para contar y para buscar
+  const condicionesWhere = filtro ? {
+    OR: [
+      { id_usuario: { contains: filtro } },
+      { usuarios: { nombre_usuario: { contains: filtro } } },
+    ]
+  } : {};
+
+  // Traemos las compras de la base de datos SIN PAGINAR primero.
+  // ANTES de cortar por páginas para que la busqueda del admin sea global.
   const todasLasComprasDB = await prisma.compras.findMany({
     select: {
       id_pedido: true,
       id_usuario: true,
       id_evento: true,
       cantidad: true,
-      // join con la tabla usuarios
       usuarios: {
         select: {
           nombre_usuario: true, 
         }
       }
     },
-  //  orderBy: {
-  //    id_pedido: 'desc', // Muestra las compras más recientes primero
- // }
+    //orderBy: {
+    //  id_pedido: 'desc',
+    //}
   });
+
+
 
   // recorrer las compras y consultar la info de cada evento a Seller
   //primero guarda arreglo de promesas con toda la info de cada evento, luego Promise.all espera a que se resuelvan todas las promesas y devuelve un arreglo con la info
@@ -81,7 +102,28 @@ export default async function ComprasPage() {
   const comprasA_listar = listaComprasCompletas.filter(
     (item): item is NonNullable<typeof item> => item !== null
   );
+  // 3. FILTRADO GLOBAL EN MEMORIA: Ahora que tenemos TODA la información unificada
+  // (ID de pedido, Nombre de Usuario y Nombre del Evento de la API), filtramos TODO el universo de datos.
+  const comprasFiltradasGlobal = comprasA_listar.filter((compra) => {
+    if (!filtro) return true; // Si no hay búsqueda, pasan todas
+    
+    return (
+      compra.idPedido.toString().includes(filtro) ||
+      compra.nombreUsuario.toLowerCase().includes(filtro) ||
+      compra.nombre.toLowerCase().includes(filtro) ||
+      compra.idEvento.toString().includes(filtro)
+    );
+  });
 
+  // 4. CALCULAR PAGINACIÓN: Basándonos en el resultado del filtro global
+  const totalRegistros = comprasFiltradasGlobal.length;
+  const totalPaginas = Math.ceil(totalRegistros / comprasPorPagina);
+
+  // (Paginación): Extraemos únicamente el segmento correspondiente a la página actual
+  const inicio = (pagina - 1) * comprasPorPagina;
+  const fin = inicio + comprasPorPagina;
+  const comprasPagina = comprasFiltradasGlobal.slice(inicio, fin);
+  
    return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10">
       <div>
@@ -92,7 +134,10 @@ export default async function ComprasPage() {
       </div>
 
       {/* Enviamos los datos procesados a la tabla interactiva del cliente */}
-      <AdminTablaCompras compras={comprasA_listar} />
+      <AdminTablaCompras compras={comprasPagina} />
+       {/*  nuevo componente reutilizable de paginación separado abajo */}
+    <Paginacion totalPaginas={totalPaginas} />
     </main>
   );
+  
 }

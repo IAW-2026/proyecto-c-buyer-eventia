@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 interface CompraProcesada {
   idPedido: number;
@@ -11,28 +12,36 @@ interface CompraProcesada {
 }
 
 export default function AdminTablaCompras({ compras }: { compras: CompraProcesada[] }) {
-  const [busqueda, setBusqueda] = useState("");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
 
-  // Filtrado reactivo en el cliente
-  const comprasFiltradas = compras.filter((compra) => {
-    const termino = busqueda.toLowerCase();
-    return (
-      compra.idPedido.toString().includes(termino) ||
-      compra.nombreUsuario.toLowerCase().includes(termino) ||
-      compra.nombre.toLowerCase().includes(termino) ||
-      compra.idEvento.toString().includes(termino)
-    );
-  });
+  // 1. Leer el término de búsqueda actual de la URL para dejarlo escrito si se recarga la página
+  const terminoBusqueda = searchParams.get("search") || "";
 
-  return (
+  // 2. Función que actualiza la URL cuando el administrador escribe
+  function handleSearch(term: string) {
+    const params = new URLSearchParams(searchParams);
+    
+    if (term) {
+      params.set("search", term);
+    } else {
+      params.delete("search"); // Si borra todo el texto, limpiamos el parámetro de la URL
+    }
+    params.set("page", "1"); // Al hacer una nueva búsqueda, siempre reiniciamos a la página 1
+
+    // Reemplaza la URL de forma reactiva sin recargar toda la página
+    replace(`${pathname}?${params.toString()}`);
+  }
+   return (
     <div className="flex flex-col gap-4">
       {/* Input de Filtro */}
       <div className="w-full max-w-md">
         <input
           type="text"
           placeholder="Buscar por ID Pedido, Usuario, Evento..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          defaultValue={terminoBusqueda} // Importante: defaultValue evita problemas de parpadeo al escribir
+          onChange={(e) => handleSearch(e.target.value)}
           className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
         />
       </div>
@@ -49,14 +58,14 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {comprasFiltradas.length === 0 ? (
+            {compras.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-10 text-center text-slate-400">
                   No se encontraron compras que coincidan con la búsqueda.
                 </td>
               </tr>
             ) : (
-              comprasFiltradas.map((compra) => (
+              compras.map((compra) => (
                 <tr key={compra.idPedido} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 font-mono text-xs font-bold text-teal-600">
                     #{compra.idPedido}
@@ -83,4 +92,5 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
       </div>
     </div>
   );
+
 }

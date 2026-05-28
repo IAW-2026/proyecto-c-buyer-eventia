@@ -14,16 +14,19 @@ async function getEventos() {
 
 export default async function Page() {
   const eventos = await getEventos();
+  const ahora = new Date();
+
+  // la fecha del evento debe ser posterior a la actualidad
+  const eventosFuturos = eventos.filter((evento: any) => new Date(evento.fecha) > ahora);
 
   return (
       <main className="p-6">
       <h1 className="mb-6 text-2xl font-bold">Eventos</h1>
      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {eventos.map((evento: any) => (
+      {eventosFuturos.map((evento: any) => (
       <EventoCard key={evento.idEvento} evento={evento} />
        ))}
     </div> 
     </main>
   );
 }
-

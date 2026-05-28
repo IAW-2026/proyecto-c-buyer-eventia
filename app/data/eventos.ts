@@ -29,6 +29,6 @@ export const eventos = [
     fecha: "2027-01-05T14:00:00.000Z",
     ubicacion: "direccion del evento",
     precio: 4000,
-    stock: 6,
+    stock: 0,
  },
 ];

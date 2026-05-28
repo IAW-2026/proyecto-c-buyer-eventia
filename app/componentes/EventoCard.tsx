@@ -39,7 +39,14 @@ export default function EventoCard({ evento }: Props) {
           {evento.ubicacion ?? 'Sin ubicación'}
         </li>
         <li className="border-b border-slate-200 px-4 py-2 text-sm">
-          {evento.fecha ? new Date(evento.fecha).toLocaleString() : 'Sin fecha'}
+          {evento.fecha ? new Date(evento.fecha).toLocaleString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'UTC'
+          }) + ' hs' : 'Sin fecha'}
         </li>
       </ul>
         <ul className="border-t border-slate-200">
@@ -56,5 +63,3 @@ export default function EventoCard({ evento }: Props) {
 </div>
   );
 }
-
-

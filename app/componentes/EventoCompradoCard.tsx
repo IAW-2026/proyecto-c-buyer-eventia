@@ -1,4 +1,4 @@
-
+import BotonDevolver from '@/app/componentes/BotonDevolver';
 export type EventoComprado = {
   idPedido: number;
   cantidadComprada: number;
@@ -34,6 +34,7 @@ export default function EventoCompradoCard({ evento }: Props) {
   // puede devolver si faltan más de 48hs
   const puedeDevolver = horasRestantes > 48;
 
+  
   return (
     <article className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
 
@@ -71,9 +72,7 @@ export default function EventoCompradoCard({ evento }: Props) {
           </span>
 
           {puedeDevolver ? (
-            <button className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600">
-              Devolver entradas
-            </button>
+            <BotonDevolver idPedido={evento.idPedido} />
           ) : (
             <span className="text-xs text-slate-400">
               No disponible para devolución

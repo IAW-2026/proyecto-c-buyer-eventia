@@ -10,13 +10,12 @@ export async function POST(request: Request) {
       );
     }
     return NextResponse.json(
-      { message: 'Transaccion de payments cancelada' },
-      { status: 201 }
+      { status: 204 }
     );
   } catch {
     return NextResponse.json(
-      { error: 'Body inválido' },
-      { status: 400 }
+      { error: 'no se pudo procesar el pedido cancelado' },
+      { status: 500 }
     );
   }
 }

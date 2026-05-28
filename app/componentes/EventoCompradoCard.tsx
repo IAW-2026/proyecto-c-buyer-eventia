@@ -1,4 +1,4 @@
-
+import BotonDevolver from '@/app/componentes/BotonDevolver';
 export type EventoComprado = {
   idPedido: number;
   cantidadComprada: number;
@@ -13,15 +13,28 @@ type Props = {
 
 export default function EventoCompradoCard({ evento }: Props) {
 
-  // convertir fecha string a Date
-  const fechaEvento = new Date(evento.fecha);
-  // calcular diferencia con ahora
+  // Date original
+  const dateObj = new Date(evento.fecha);
+
+  //convertir a string legible. 
+  //'UTC' para que muestre exactamente lo que dice el string de la data.
+  const fechaFormateada = dateObj.toLocaleString('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC' 
+  });
+
+  
   const ahora = new Date();
-  const diferenciaMs = fechaEvento.getTime() - ahora.getTime();
+  const diferenciaMs = dateObj.getTime() - ahora.getTime();
   const horasRestantes = diferenciaMs / (1000 * 60 * 60);
   // puede devolver si faltan más de 48hs
   const puedeDevolver = horasRestantes > 48;
 
+  
   return (
     <article className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
 
@@ -35,8 +48,8 @@ export default function EventoCompradoCard({ evento }: Props) {
 
           <div className="mt-4 space-y-2 text-sm text-slate-700">
             <p>
-              <span className="font-medium">Fecha:</span>{" "}
-              {evento.fecha}
+              <span className="font-medium">Fecha y hora:</span>{" "}
+              {fechaFormateada} hs
             </p>
 
             <p>
@@ -59,9 +72,7 @@ export default function EventoCompradoCard({ evento }: Props) {
           </span>
 
           {puedeDevolver ? (
-            <button className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600">
-              Devolver entradas
-            </button>
+            <BotonDevolver idPedido={evento.idPedido} />
           ) : (
             <span className="text-xs text-slate-400">
               No disponible para devolución

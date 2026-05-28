@@ -62,7 +62,14 @@ export default async function Page({ params }: Props) {
 
           <div className="space-y-3 text-sm text-slate-700">
             <p>📍 {evento.ubicacion}</p>
-            <p>📅 {new Date(evento.fecha).toLocaleString()}</p>
+            <p>📅 {new Date(evento.fecha).toLocaleString('es-AR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'UTC'
+            })} hs</p>
             <p>🎟️ Stock disponible: {evento.stock}</p>
           </div>
         </div>

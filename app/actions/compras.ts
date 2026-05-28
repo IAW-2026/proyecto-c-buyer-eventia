@@ -9,6 +9,16 @@ type ComprarArgs = {
   cantidad: number;
 };
  
+type EventoSeller = {
+  idEvento: number;
+  nombre: string;
+  descripcion: string;
+  fecha: string;
+  ubicacion: string;
+  precio: number;
+  stock: number;
+};
+ 
 
 export async function comprar({
   idEvento,
@@ -109,4 +119,88 @@ export async function comprar({
     idPedido,
     idTransaccion,
     };
+}
+
+//Server Action para cancelar un pedido
+export async function cancelarPedido({ idPedido }: { idPedido: number }) {
+  // obtengo el registro de compra de la base de datos
+  const compra = await prisma.compras.findUnique({
+    where: { id_pedido: idPedido },
+  });
+
+  if (!compra) {
+    throw new Error('Pedido no encontrado.');
+  }
+
+  //  detalles del evento de la API del Vendedor para verificar la fecha original
+  const sellerUrl = process.env.URL_SELLER ?? 'http://localhost:3000/';
+  const res = await fetch(`${sellerUrl}api/seller/eventos/${compra.id_evento}`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    throw new Error('Error al obtener información del evento desde el sistema del vendedor.');
+  }
+  const eventoSeller: EventoSeller = await res.json(); // Casteamos al tipo EventoSeller
+  const eventDate = new Date(eventoSeller.fecha); // Esta es la fecha original del evento
+  // Re-verificar la regla de las 48 horas 
+  const now = new Date();
+  const differenceMs = eventDate.getTime() - now.getTime();
+  const hoursRemaining = differenceMs / (1000 * 60 * 60);
+
+  if (hoursRemaining <= 48) {
+    throw new Error('No se puede cancelar el pedido. Faltan menos de 48 horas para el evento.');
+  }
+
+  // API de Payments para cancelar el pedido en el sistema de pagos
+  const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000/';
+  const cancelarPaymentsRes = await fetch(`${paymentsUrl}api/payments/pedidoCancelado`, {
+    method: 'POST', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idPedido: compra.id_pedido,
+    }),
+  });
+  
+  if (!cancelarPaymentsRes.ok) {
+    let errorMessage = cancelarPaymentsRes.statusText;
+    const contentType = cancelarPaymentsRes.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      const errorData = await cancelarPaymentsRes.json();
+      errorMessage = errorData.message || errorMessage;
+    }
+    console.error('Error de la API de Payments durante la cancelación:', errorMessage);
+    throw new Error(`Error al cancelar el pedido en el sistema de pagos: ${errorMessage}`);
+  }
+
+  // API de Shipping para cancelar entradas
+  const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000/';
+  const cancelarShippingRes = await fetch(`${shippingUrl}api/shipping/pedidoCancelado`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idPedido: compra.id_pedido,
+    }),
+  });
+  
+  if (!cancelarShippingRes.ok) {
+    let errorMessage = cancelarShippingRes.statusText;
+    const contentType = cancelarShippingRes.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      const errorData = await cancelarShippingRes.json();
+      errorMessage = errorData.message || errorMessage;
+    }
+    console.error('Error de la API de Shipping durante la cancelación:', errorMessage);
+    throw new Error(`Error al cancelar el pedido en el sistema de shipping: ${errorMessage}`);
+  }
+
+  //Eliminar el registro de compra de la base de datos
+  await prisma.compras.delete({
+    where: { id_pedido: idPedido },
+  });
+
+  return { success: true };
 }

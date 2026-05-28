@@ -36,7 +36,7 @@ export async function comprar({
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');
     }
-
+    const sellerKey = process.env.SELLER_API_KEY;
     //hago el POST a seller para crear el pedido
     const respuestaSeller = await fetch(
       `${sellerUrl}api/seller/pedidos`,
@@ -45,7 +45,7 @@ export async function comprar({
         method: 'POST',
 
         headers: {
-          'Content-Type': 'application/json',
+          'x-api-key': sellerKey ?? '',
         },
 
         body: JSON.stringify({
@@ -60,13 +60,14 @@ export async function comprar({
     const data = await respuestaSeller.json();
     const { idPedido, monto } = data;
    // alert(`Pedido creado: ${idPedido} y monto: ${monto} `);
-
+    const paymentsKey = process.env.PAYMENTS_API_KEY;
     //necesito usar esos datos para hacer los post a shipping y payments
     //hago POST a payments para crear la transacción
    const respuestaPayment = await fetch(`${paymentsUrl}api/payments/nuevaTransaccion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': paymentsKey ?? '',
       },
       body: JSON.stringify({
         idPedido,
@@ -101,11 +102,11 @@ export async function comprar({
     console.error('Error al guardar en BD:', error);
     throw new Error('No se pudo registrar la compra en la base de datos');
   }
-    
+    const shippingKey = process.env.SHIPPING_API_KEY;
     const respuestaShipping = await fetch(`${shippingUrl}api/shipping/nuevaEntrada`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+         'x-api-key': shippingKey ?? '',
       },
       body: JSON.stringify({
         idPedido,
@@ -134,7 +135,12 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
 
   //  detalles del evento de la API del Vendedor para verificar la fecha original
   const sellerUrl = process.env.URL_SELLER ?? 'http://localhost:3000/';
+  const sellerApiKey = process.env.SELLER_API_KEY;
   const res = await fetch(`${sellerUrl}api/seller/eventos/${compra.id_evento}`, {
+    headers: {
+      // API Key en header igual que en el POST
+      'x-api-key': sellerApiKey ?? '', 
+    },
     cache: 'no-store',
   });
   if (!res.ok) {
@@ -153,10 +159,11 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
 
   // API de Payments para cancelar el pedido en el sistema de pagos
   const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000/';
+  const paymentsKey = process.env.PAYMENTS_API_KEY;
   const cancelarPaymentsRes = await fetch(`${paymentsUrl}api/payments/pedidoCancelado`, {
     method: 'POST', 
     headers: {
-      'Content-Type': 'application/json',
+      'x-api-key': paymentsKey ?? '',
     },
     body: JSON.stringify({
       idPedido: compra.id_pedido,
@@ -176,10 +183,11 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
 
   // API de Shipping para cancelar entradas
   const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000/';
+  const shippingKey = process.env.SHIPPING_API_KEY;
   const cancelarShippingRes = await fetch(`${shippingUrl}api/shipping/pedidoCancelado`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'x-api-key': shippingKey ?? '',
     },
     body: JSON.stringify({
       idPedido: compra.id_pedido,

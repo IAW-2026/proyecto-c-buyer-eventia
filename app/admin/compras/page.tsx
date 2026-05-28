@@ -19,9 +19,12 @@ type EventoSeller = {
 // función auxiliar para pedirle a la API de Seller los datos de un evento específico
 async function fetchInfoEvento(idEvento: number): Promise<EventoSeller | null> {
   const baseUrl =  process.env.URL_SELLER ?? 'http://localhost:3000';
-
+  const sellerApiKey = process.env.SELLER_API_KEY;
   try {
     const res = await fetch(`${baseUrl}/api/seller/eventos/${idEvento}`, {
+      headers: {
+        'x-api-key': sellerApiKey ?? '',
+      },
       cache: 'no-store', // Evita respuestas cacheadas viejas
     });
 

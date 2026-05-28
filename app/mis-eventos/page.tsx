@@ -19,6 +19,9 @@ async function fetchInfoEvento(idEvento: number): Promise<EventoSeller | null> {
 
   try {
     const res = await fetch(`${baseUrl}/api/seller/eventos/${idEvento}`, {
+      headers: {
+        'x-api-key': process.env.SELLER_API_KEY ?? '',
+      },
       cache: 'no-store', // Evita respuestas cacheadas viejas
     });
 

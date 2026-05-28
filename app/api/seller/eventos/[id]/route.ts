@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { eventos } from '@/app/data/eventos';
+import { validarApiKey } from '@/lib/apiKey';
 
 type Params = {
   params: Promise<{
@@ -11,6 +12,11 @@ export async function GET(
   _request: Request,
   { params }: Params
 ) {
+   // Validamos la API Key antes de devolver el evento
+        const sellerKey = process.env.SELLER_API_KEY;
+        if (!validarApiKey(_request, sellerKey)) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+        }
   const { id } = await params;
 
   const idEvento = Number(id);

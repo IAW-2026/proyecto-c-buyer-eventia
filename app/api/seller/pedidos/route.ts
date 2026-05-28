@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { eventos } from '@/app/data/eventos';
+import { validarApiKey } from '@/lib/apiKey';
 
 export async function POST(request: Request) {
-
+   // Validar api key
+      const sellerKey = process.env.SELLER_API_KEY;
+      if (!validarApiKey(request, sellerKey)) {
+          return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+      }
   const body = await request.json();
 
   const { idEvento, cantidad } = body;

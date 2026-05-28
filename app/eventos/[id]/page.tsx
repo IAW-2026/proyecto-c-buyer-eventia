@@ -23,7 +23,9 @@ async function getEvento(id: string) {
 
   const res = await fetch(
     `${baseUrl}/api/seller/eventos/${id}`,
-    {
+    { headers: {
+      'x-api-key': process.env.SELLER_API_KEY ?? '', 
+    },
       cache: 'no-store',
     }
   );

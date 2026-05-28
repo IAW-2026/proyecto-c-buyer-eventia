@@ -5,8 +5,11 @@ async function getEventos() {
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-
-  const res = await fetch(`${base}/api/seller/eventos`, { cache: 'no-store' });
+  const sellerApiKey = process.env.SELLER_API_KEY;
+  const res = await fetch(`${base}/api/seller/eventos`, { headers: {
+      // API Key en header igual que en el POST
+      'x-api-key': sellerApiKey ?? '', 
+    }, cache: 'no-store' });
   if (!res.ok) throw new Error('Error fetching eventos: ' + res.status);
   return res.json();
 }

@@ -1,7 +1,13 @@
+import { validarApiKey } from '@/lib/apiKey';
 import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
+     // Validar api key
+        const paymentsKey = process.env.PAYMENTS_API_KEY;
+        if (!validarApiKey(request, paymentsKey)) {
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+        }
     const { idPedido } = await request.json();
 
     if (!idPedido) {

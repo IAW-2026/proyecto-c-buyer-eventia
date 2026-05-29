@@ -4,6 +4,8 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import {prisma} from "@/lib/prisma";
+import { isAdminBuyer } from "@/lib/admin";
+import { revalidatePath } from "next/cache";
 
 export async function getOrCreateUser() {
   // auth()  para obtener solo el ID
@@ -54,4 +56,17 @@ export async function getOrCreateUser() {
   });
 
   return nuevoUsuario;
+}
+
+//Elimina un usuario de la base de datos.
+
+export async function eliminarUsuario(idUsuario: string) {
+  const admin = await isAdminBuyer();
+  if (!admin) throw new Error("No autorizado");
+
+  await prisma.usuarios.delete({
+    where: { id_usuario: idUsuario },
+  });
+
+  revalidatePath("/admin/usuarios");
 }

@@ -14,6 +14,7 @@ type EventoSeller = {
   nombre: string;
   descripcion: string;
   fecha: string;
+  categoria: string;
   ubicacion: string;
   precio: number;
   stock: number;

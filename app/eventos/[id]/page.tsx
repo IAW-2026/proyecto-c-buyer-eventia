@@ -18,14 +18,14 @@ type Evento = {
 };
 
 async function getEvento(id: string) {
-
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
   const res = await fetch(
     `${baseUrl}/api/seller/eventos/${id}`,
-    { headers: {
-      'x-api-key': process.env.SELLER_API_KEY ?? '', 
-    },
+    {
+      headers: {
+        'x-api-key': process.env.SELLER_API_KEY ?? '',
+      },
       cache: 'no-store',
     }
   );
@@ -38,7 +38,6 @@ async function getEvento(id: string) {
 }
 
 export default async function Page({ params }: Props) {
-
   const { id } = await params;
 
   const evento = await getEvento(id);
@@ -48,46 +47,100 @@ export default async function Page({ params }: Props) {
   }
 
   return (
+    <main className="layout-container flex items-start justify-center pt-12">
 
-  <main className="flex min-h-screen items-start justify-center bg-slate-100 pt-12 px-6">
+      <div className="grid-retro-fluid w-full max-w-7xl">
 
-     <div className="flex w-full max-w-5xl min-h-[60vh] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
-      {/* imagen */}
-      <div className="flex w-1/3 items-center justify-center bg-slate-300 text-slate-600">Image</div>
+        {/* CARD PRINCIPAL */}
+        <section className="card-retro col-span-4 md:col-span-8 overflow-hidden">
 
-      {/* informacion */}
-      <div className="flex flex-1 flex-col justify-between p-6">
-        <div>
-          <h1 className="mb-4 text-3xl font-bold text-slate-900"> {evento.nombre} </h1>
+          {/* Banner */}
+          <div className="flex h-72 items-center justify-center rounded-xl border border-primary/10 bg-surface-container-high text-on-surface-variant">
 
-          <p className="mb-6 text-slate-600">{evento.descripcion}  </p>
+          <div className="flex flex-col items-center gap-3 opacity-60">
+            
+            <div className="h-16 w-16 rounded-full border border-primary/20 bg-primary/5" />
 
-          <div className="space-y-3 text-sm text-slate-700">
-            <p>📍 {evento.ubicacion}</p>
-            <p>📅 {new Date(evento.fecha).toLocaleString('es-AR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              timeZone: 'UTC'
-            })} hs</p>
-            <p>🎟️ Stock disponible: {evento.stock}</p>
+            <span className="text-label-lg uppercase tracking-[0.25em]">
+              Imagen del evento
+            </span>
+
           </div>
         </div>
+
+          {/* Contenido */}
+          <div className="mt-8 space-y-6">
+
+            <div>
+              <h1 className="text-headline-lg-mobile md:text-headline-lg text-primary">
+                {evento.nombre}
+              </h1>
+            </div>
+
+            <p className="text-body-lg text-on-surface-variant leading-relaxed">
+              {evento.descripcion}
+            </p>
+
+            {/* Chips */}
+            <div className="flex flex-wrap gap-3">
+
+              <span className="chip-retro">
+                📍 {evento.ubicacion}
+              </span>
+
+              <span className="chip-retro">
+                🎟️ {evento.stock} disponibles
+              </span>
+
+            </div>
+
+            {/* Fecha */}
+            <div className="border-t border-primary/10 pt-6">
+
+              <p className="text-label-lg text-on-surface-variant">
+                📅{' '}
+                {new Date(evento.fecha).toLocaleString('es-AR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZone: 'UTC',
+                })}{' '}
+                hs
+              </p>
+
+            </div>
+          </div>
+        </section>
+
+        {/* PANEL COMPRA */}
+        <aside className="card-retro-tonal col-span-4 md:col-span-4 flex flex-col justify-between min-h-[420px]">
+
+          <div className="space-y-4">
+
+            <div>
+              <p className="text-label-lg text-on-surface-variant uppercase">
+                Entrada
+              </p>
+
+              <h2 className="text-headline-md text-primary">
+                ${evento.precio}
+              </h2>
+            </div>
+
+          </div>
+
+          {/* Botón */}
+          <div className="mt-8">
+            <BotonComprar
+              idEvento={evento.idEvento}
+              stock={evento.stock}
+            />
+          </div>
+
+        </aside>
       </div>
-
-      {/* compra */}
-      <div className="flex w-72 flex-col justify-between border-l border-slate-200 bg-slate-50 p-6">
-
-        <div>
-          <p className="text-sm text-slate-500">Entrada: </p>
-          <h2 className="mb-6 text-4xl font-bold text-slate-900"> ${evento.precio} </h2>
-        </div>
-
-        <BotonComprar idEvento={evento.idEvento } stock={evento.stock} />
-      </div>
-    </div>
-  </main>
+    </main>
   );
 }

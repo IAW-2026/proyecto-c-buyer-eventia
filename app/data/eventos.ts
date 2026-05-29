@@ -11,10 +11,7 @@ export const eventos = [
     precio: 5000,
     stock: 10,
     categoria: 'entretenimiento general',
-    imagenes: [
-      'https://images.unsplash.com/photo-1565192647048-f997ed87f50d',
-      'https://images.unsplash.com/photo-1595435934249-5df7ed86182d'
-    ]
+    imagenes: []
   },
   {
     idEvento: 2,

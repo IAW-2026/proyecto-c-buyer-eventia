@@ -10,6 +10,8 @@ type Evento = {
   ubicacion: string;
   precio: number;
   stock: number;
+  imagenes: string[];
+  categoria: string;
 };
 
 type Props = {
@@ -17,15 +19,27 @@ type Props = {
 };
 
 export default function EventoCard({ evento }: Props) {
+   // Capturamos la primera imagen si es que existe
+  const tieneImagenes = evento.imagenes && evento.imagenes.length > 0;
+  const primeraImagen = tieneImagenes ? evento.imagenes[0] : null;
   return (
     <div className="card-retro w-full max-w-sm overflow-hidden">
       
-      {/* Imagen */}
-      <div className="flex h-44 items-center justify-center rounded-xl bg-primary-container/15 text-primary">
-        <span className="text-label-lg uppercase tracking-widest">
-          imagen
-        </span>
-      </div>
+    
+        {/* Renderizado Condicional de la Imagen */}
+        <div className="relative h-44 w-full overflow-hidden rounded-xl border border-primary/5 bg-primary-container/15 flex items-center justify-center text-primary">
+          {primeraImagen ? (
+            <img
+              src={primeraImagen}
+              alt={evento.nombre ?? 'Imagen del evento'}
+              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          ) : (
+            <span className="text-label-lg uppercase tracking-widest opacity-60">
+              Sin imagen
+            </span>
+          )}
+        </div>
 
       {/* Contenido */}
       <div className="mt-5 space-y-3">

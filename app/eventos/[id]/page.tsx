@@ -1,4 +1,5 @@
 import BotonComprar from '@/app/componentes/BotonComprar';
+import CarruselImagenes from '@/app/componentes/Carrusel';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -15,6 +16,8 @@ type Evento = {
   ubicacion: string;
   precio: number;
   stock: number;
+  imagenes: string[];
+  categoria: string;
 };
 
 async function getEvento(id: string) {
@@ -54,19 +57,11 @@ export default async function Page({ params }: Props) {
         {/* CARD PRINCIPAL */}
         <section className="card-retro col-span-4 md:col-span-8 overflow-hidden">
 
-          {/* Banner */}
-          <div className="flex h-72 items-center justify-center rounded-xl border border-primary/10 bg-surface-container-high text-on-surface-variant">
-
-          <div className="flex flex-col items-center gap-3 opacity-60">
-            
-            <div className="h-16 w-16 rounded-full border border-primary/20 bg-primary/5" />
-
-            <span className="text-label-lg uppercase tracking-[0.25em]">
-              Imagen del evento
-            </span>
-
-          </div>
-        </div>
+          {/*imagenes */}
+          <CarruselImagenes 
+            imagenes={evento.imagenes} 
+            nombreEvento={evento.nombre} 
+          />
 
           {/* Contenido */}
           <div className="mt-8 space-y-6">

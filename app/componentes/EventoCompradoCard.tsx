@@ -35,52 +35,63 @@ export default function EventoCompradoCard({ evento }: Props) {
   const puedeDevolver = horasRestantes > 48;
 
   
+
   return (
-    <article className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+  <article className="card-retro hover:-translate-y-1">
 
-      <div className="flex items-start justify-between gap-6">
+    <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
 
-        {/* info izquierda */}
-        <div className="flex-1">
-          <h2 className="text-2xl font-semibold text-slate-900">
-            {evento.nombre}
-          </h2>
+      {/* izquierda */}
+      <div className="flex-1">
 
-          <div className="mt-4 space-y-2 text-sm text-slate-700">
-            <p>
-              <span className="font-medium">Fecha y hora:</span>{" "}
-              {fechaFormateada} hs
-            </p>
+        {/* titulo */}
+        <h2 className="text-body-lg font-semibold text-primary">
+          {evento.nombre}
+        </h2>
 
-            <p>
-              <span className="font-medium">Ubicación:</span>{" "}
-              {evento.ubicacion}
-            </p>
+        {/* info */}
+        <div className="mt-4 space-y-2 border-t border-primary/10 pt-4">
 
-            <p>
-              <span className="font-medium">Pedido:</span>{" "}
-              #{evento.idPedido}
-            </p>
-          </div>
+          <p className="text-body-md text-on-surface-variant">
+            Fecha y hora: {fechaFormateada} hs
+          </p>
+
+          <p className="text-body-md text-on-surface-variant">
+            📍 {evento.ubicacion}
+          </p>
+
+          <p className="text-body-md text-on-surface-variant">
+            🎟️ {evento.cantidadComprada}{' '}
+            {evento.cantidadComprada === 1
+              ? 'ticket'
+              : 'tickets'}
+          </p>
+
+          <p className="text-label-sm text-on-surface-variant/70">
+            Pedido #{evento.idPedido}
+          </p>
+
         </div>
+      </div>
 
-        {/* cantidad */}
-        <div className="flex flex-col items-end gap-3">
-          <span className="rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
-            {evento.cantidadComprada}{" "}
-            {evento.cantidadComprada === 1 ? "ticket" : "tickets"}
+      {/* derecha */}
+      <div className="flex flex-col items-start gap-3 md:items-end">
+
+        {puedeDevolver ? (
+
+          <BotonDevolver idPedido={evento.idPedido} />
+
+        ) : (
+
+          <span className="text-label-sm text-on-surface-variant/60">
+            No disponible para devolución
           </span>
 
-          {puedeDevolver ? (
-            <BotonDevolver idPedido={evento.idPedido} />
-          ) : (
-            <span className="text-xs text-slate-400">
-              No disponible para devolución
-            </span>
-          )}
-        </div>
+        )}
 
       </div>
-    </article>
-  );
+
+    </div>
+  </article>
+);
 }

@@ -31,20 +31,9 @@ export async function comprar({
      const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000/';
      const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000/';
 
+    //obtener y asegurar el usuario en la BD
+    const usuario = await getOrCreateUser();
     
-    // 1. Obtener el usuario de manera segura
-      let usuario;
-      try {
-        usuario = await getOrCreateUser(); 
-      } catch (error) {
-        // Si  función de usuarios tira error o redirige cuando no hay sesión:
-        throw new Error('AUTH_REQUIRED');
-      }
-
-      // Si getOrCreateUser no tira error pero devuelve null o undefined:
-      if (!usuario) {
-        throw new Error('AUTH_REQUIRED');
-      }
     //control de cantidad para evitar que se hagan pedidos con cantidades no válidas
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
     throw new Error('Cantidad inválida');

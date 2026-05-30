@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { comprar } from '../actions/compras';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   idEvento: number;
@@ -14,12 +14,7 @@ type Props = {
   idEvento,stock,precio
 }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  // 1. Si en la URL viene una cantidad guardada del login, la ponemos como estado inicial
-  const cantidadInicial = searchParams.get('cantidad') 
-    ? Number(searchParams.get('cantidad')) 
-    : (stock > 0 ? 1 : 0);
-  const [cantidad, setCantidad] = useState(cantidadInicial);
+  const [cantidad, setCantidad] = useState(stock > 0 ? 1 : 0);
   const [cargando, setCargando] = useState(false);
   
   // Estados para controlar los carteles en pantalla
@@ -46,22 +41,6 @@ type Props = {
 
       if (error.message === "NEXT_REDIRECT") {
         throw error;
-      }
-      
-      //  Si falta autenticación, lo mandamos a loguearse sin perder los datos
-      if (error.message === "AUTH_REQUIRED") {
-        // 1. Obtenemos el dominio base 
-        const baseUrl = process.env.URL_BUYER ?? 'http://localhost:3000/';
-
-        // URL ABSOLUTA COMPLETA que Clerk exige en producción
-        const urlCompletaRetorno = `${baseUrl}eventos/${idEvento}?cantidad=${cantidad}`;
-        
-        // 3. Encodemos la URL completa
-        const URL_Retorno = encodeURIComponent(urlCompletaRetorno);
-        
-        // 4. Redireccionamos pasándole la URL absoluta a Clerk
-        router.push(`/sign-in?redirect_url=${URL_Retorno}`);
-        return;
       }
 
       // Mapeamos los errores técnicos a textos legibles para el usuario

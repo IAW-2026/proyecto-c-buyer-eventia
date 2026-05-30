@@ -7,7 +7,6 @@ type Props = {
   params: Promise<{
     id: string;
   }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 type Evento = {
@@ -42,9 +41,8 @@ async function getEvento(id: string) {
   return res.json() as Promise<Evento>;
 }
 
-export default async function Page({ params, searchParams }: Props){
+export default async function Page({ params}: Props){
   const { id } = await params;
-  await searchParams; //Forzamos a que el servidor evalúe los cambios de query params al volver
   const evento = await getEvento(id);
 
   if (!evento) {

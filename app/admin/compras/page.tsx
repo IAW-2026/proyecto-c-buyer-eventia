@@ -38,8 +38,9 @@ async function fetchInfoEvento(idEvento: number): Promise<EventoSeller | null> {
 }
 //  propiedades de la página para aceptar los searchParams de Next.js
 interface PageProps {
-  searchParams: Promise<{ search?: string; page?: string }>;
+   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
+
 export default async function ComprasPage({ searchParams }: PageProps) {
   // Doble verificación de seguridad en el servidor
   const admin = await isAdminBuyer();
@@ -50,8 +51,12 @@ export default async function ComprasPage({ searchParams }: PageProps) {
   // Extraer los parámetros de búsqueda y paginación de la URL
   const params = await searchParams;
   const filtro = params.search || "";
+  const selectedCategory = params.category as string || '';
+  const fechaIni = params.desde as string || '';
+  const fechaFin = params.hasta as string || ''
   const pagina = Number(params.page) || 1;
   const comprasPorPagina = 6; // Cantidad de filas por página
+  
 
   // Crear la condición de filtrado común para contar y para buscar
   const condicionesWhere = filtro ? {
@@ -97,6 +102,7 @@ export default async function ComprasPage({ searchParams }: PageProps) {
         cantidadComprada: compra.cantidad,
         nombre: infoSeller.nombre ,
         categoria: infoSeller.categoria,
+        fecha: infoSeller.fecha,
       };
     }
        return null;
@@ -107,28 +113,55 @@ export default async function ComprasPage({ searchParams }: PageProps) {
   const comprasA_listar = listaComprasCompletas.filter(
     (item): item is NonNullable<typeof item> => item !== null
   );
-  // 3. FILTRADO GLOBAL EN MEMORIA: Ahora que tenemos TODA la información unificada
-  // (ID de pedido, Nombre de Usuario y Nombre del Evento de la API), filtramos TODO el universo de datos.
-  const comprasFiltradasGlobal = comprasA_listar.filter((compra) => {
-    if (!filtro) return true; // Si no hay búsqueda, pasan todas
-    
-    return (
-      compra.idPedido.toString().includes(filtro) ||
-      compra.nombreUsuario.toLowerCase().includes(filtro) ||
+
+  /* Extracción de categorías únicas basadas en los eventos reales comprados por el usuario */
+  const availableCategories = Array.from(new Set<string>(comprasA_listar.map((evento: any) => evento.categoria)));
+
+   /* LÓGICA DE FILTRADO APLICADA */
+  let comprasFiltradas = comprasA_listar;
+
+  /* filtrado por texto: buscador */
+  if (filtro) {
+    comprasFiltradas = comprasFiltradas.filter(
+      (compra: any) =>
+       compra.idPedido.toString().toLowerCase().includes(filtro) ||
+       compra.nombreUsuario.toLowerCase().includes(filtro) ||
       compra.nombre.toLowerCase().includes(filtro) ||
       compra.idEvento.toString().includes(filtro) ||
       compra.categoria.toLowerCase().includes(filtro)
     );
-  });
+  }
 
+  /* filtrado por categoría: selector desplegable */
+  if (selectedCategory) {
+    comprasFiltradas = comprasFiltradas.filter(
+      (compra: any) => compra.categoria.toLowerCase() === selectedCategory.toLowerCase()
+    );
+  }
+
+  /* filtrado por rango de fechas */
+  if (fechaIni) {
+    const inicioBusqueda = new Date(`${fechaIni}T00:00:00.000Z`); // Normalizado a UTC
+    comprasFiltradas = comprasFiltradas.filter(
+      (compra: any) => new Date(compra.fecha) >= inicioBusqueda
+    );
+  }
+
+  if (fechaFin) {
+    const finBusqueda = new Date(`${fechaFin}T23:59:59.999Z`); // Incluye todo el día elegido
+    comprasFiltradas = comprasFiltradas.filter(
+      (compra: any) => new Date(compra.fecha) <= finBusqueda
+    );
+  }
+   
   // 4. CALCULAR PAGINACIÓN: Basándonos en el resultado del filtro global
-  const totalRegistros = comprasFiltradasGlobal.length;
+  const totalRegistros = comprasFiltradas.length;
   const totalPaginas = Math.ceil(totalRegistros / comprasPorPagina);
 
   // (Paginación): Extraemos únicamente el segmento correspondiente a la página actual
   const inicio = (pagina - 1) * comprasPorPagina;
   const fin = inicio + comprasPorPagina;
-  const comprasPagina = comprasFiltradasGlobal.slice(inicio, fin);
+  const comprasPagina = comprasFiltradas.slice(inicio, fin);
   
    return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10">
@@ -138,7 +171,7 @@ export default async function ComprasPage({ searchParams }: PageProps) {
           Listado global de transacciones y órdenes generadas en la plataforma.
         </p>
       </div>
-
+      
       {/* Enviamos los datos procesados a la tabla interactiva del cliente */}
       <AdminTablaCompras compras={comprasPagina} />
        {/*  nuevo componente reutilizable de paginación separado abajo */}

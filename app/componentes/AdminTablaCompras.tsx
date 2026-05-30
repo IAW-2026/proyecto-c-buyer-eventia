@@ -8,7 +8,7 @@ interface CompraProcesada {
   idEvento: number;
   cantidadComprada: number;
   nombre: string;
-  categoria: string; // ¡Ahora con categoría!
+  categoria: string; 
 }
 
 export default function AdminTablaCompras({ compras }: { compras: CompraProcesada[] }) {

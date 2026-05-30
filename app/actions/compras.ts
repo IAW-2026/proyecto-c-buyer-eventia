@@ -52,15 +52,29 @@ export async function comprar({
         body: JSON.stringify({
           idEvento,
           cantidad,
+          idUsuario: usuario.id_usuario
         }),
       }
     );
+    //extraer error para mostrar lo correcto en la pantalla del cliente
     if (!respuestaSeller.ok) {
-    throw new Error('Error creando pedido');
+    try {
+      const errorData = await respuestaSeller.json();
+      // Si el error contiene frases clave, lanzamos un mensaje amigable
+      if (errorData?.error?.includes("Stock insuficiente") || errorData?.error === "STOCK_INSUFICIENTE") {
+        throw new Error('ENTRADAS_AGOTADAS');
+      }
+      if (errorData?.error?.includes("Evento no encontrado") || errorData?.error === "EVENTO_NO_ENCONTRADO") {
+        throw new Error('EVENTO_NO_ENCONTRADO');
+      }
+      throw new Error(errorData?.error || 'Error creando el pedido');
+    } catch (e: any) {
+      // Si no es un JSON válido lo que devolvió, pasamos el error tal cual
+      throw new Error(e.message || 'Error en el servidor de pedidos');
+    }
   }
     const data = await respuestaSeller.json();
     const { idPedido, monto } = data;
-   // alert(`Pedido creado: ${idPedido} y monto: ${monto} `);
     const paymentsKey = process.env.PAYMENTS_API_KEY;
     //necesito usar esos datos para hacer los post a shipping y payments
     //hago POST a payments para crear la transacción
@@ -71,12 +85,19 @@ export async function comprar({
         'x-api-key': paymentsKey ?? '',
       },
       body: JSON.stringify({
-        idPedido,
+        idPedido, idEvento, monto, idComprador: usuario.id_usuario
       }),
     });
-    //if (!respuestaPayment.ok) {
-    //throw new Error('Error creando transacción');
-    //  }
+
+    if (!respuestaPayment.ok) {
+    try {
+      const errorData = await respuestaPayment.json();
+      throw new Error(errorData?.error || 'Error creando transaccion de pago');
+    } catch (e: any) {
+      // Si no es un JSON válido lo que devolvió, pasamos el error tal cual
+      throw new Error(e.message || 'Error en el servidor de pagos');
+    }
+    }
 
     const paymentData = await respuestaPayment.json();
     console.log('PAYMENT DATA:', paymentData);
@@ -88,7 +109,7 @@ export async function comprar({
     `idTransaccion inválido: ${JSON.stringify(paymentData)}`
     );
 }
-    // Ahora que tengo el idTransaccion, puedo guardar la compra en la base de datos. 
+
     try {
     const compraGuardada = await prisma.compras.create({
       data: {
@@ -103,6 +124,7 @@ export async function comprar({
     console.error('Error al guardar en BD:', error);
     throw new Error('No se pudo registrar la compra en la base de datos');
   }
+    //POST a shipping para generar la entrada
     const shippingKey = process.env.SHIPPING_API_KEY;
     const respuestaShipping = await fetch(`${shippingUrl}api/shipping/nuevaEntrada`, {
       method: 'POST',
@@ -110,17 +132,21 @@ export async function comprar({
          'x-api-key': shippingKey ?? '',
       },
       body: JSON.stringify({
-        idPedido,
+        idPedido, idEvento, cantidad, idUsuario: usuario.id_usuario
       }),
     });
-    if (!respuestaShipping.ok) {
-    throw new Error('Error creando shipping');
-}
-    return {
-    ok: true,
-    idPedido,
-    idTransaccion,
-    };
+    
+      if (!respuestaShipping.ok) {
+      try {
+        const errorData = await respuestaShipping.json();
+        throw new Error(errorData?.error || 'Error creando entrada');
+      } catch (e: any) {
+        // Si no es un JSON válido lo que devolvió, pasamos el error tal cual
+        throw new Error(e.message || 'Error en el servidor de shipping');
+      }
+    }
+
+    return { ok: true, idPedido};
 }
 
 //Server Action para cancelar un pedido

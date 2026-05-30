@@ -9,8 +9,9 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
       }
   const body = await request.json();
-
-  const { idEvento, cantidad } = body;
+    const {idEvento, cantidad, idUsuario} = body;
+    console.log("seller Petición recibida :");
+    console.log(JSON.stringify(body, null, 2));
  
   const evento = eventos.find(
     (e) => e.idEvento === idEvento

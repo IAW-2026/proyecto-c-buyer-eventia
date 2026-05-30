@@ -8,7 +8,10 @@ export async function POST(request: Request) {
         if (!validarApiKey(request, paymentsKey)) {
             return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
         }
-    const { idPedido } = await request.json();
+    const body = await request.json();
+    const { idPedido, idEvento, monto, idComprador } = body;
+    console.log("payments Petición recibida :");
+    console.log(JSON.stringify(body, null, 2));
 
     if (!idPedido) {
       return NextResponse.json({ error: 'idPedido es requerido' }, { status: 400 });

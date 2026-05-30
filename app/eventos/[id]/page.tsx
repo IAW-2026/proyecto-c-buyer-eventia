@@ -2,6 +2,7 @@ import BotonComprar from '@/app/componentes/BotonComprar';
 import CarruselImagenes from '@/app/componentes/Carrusel';
 import { notFound } from 'next/navigation';
 
+
 type Props = {
   params: Promise<{
     id: string;
@@ -131,6 +132,7 @@ export default async function Page({ params }: Props) {
             <BotonComprar
               idEvento={evento.idEvento}
               stock={evento.stock}
+              precio={evento.precio}
             />
           </div>
 

@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { isAdminBuyer } from '@/lib/admin';
 import { redirect } from 'next/navigation';
-import { eliminarUsuario } from '@/app/actions/usuarios';
 
 export default async function Page() {
   // Verificación de seguridad
@@ -29,7 +28,6 @@ export default async function Page() {
               <th className="px-6 py-4">ID de Clerk</th>
               <th className="px-6 py-4">Nombre</th>
               <th className="px-6 py-4">Mail</th>
-              <th className="px-6 py-4 text-right">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
@@ -38,13 +36,6 @@ export default async function Page() {
                 <td className="px-6 py-4 font-mono text-xs text-slate-500">{u.id_usuario}</td>
                 <td className="px-6 py-4 font-medium text-slate-900">{u.nombre_usuario}</td>
                 <td className="px-6 py-4 text-slate-600">{u.mail}</td>
-                <td className="px-6 py-4 text-right">
-                  <form action={eliminarUsuario.bind(null, u.id_usuario)}>
-                    <button className="text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-800">
-                      Eliminar
-                    </button>
-                  </form>
-                </td>
               </tr>
             ))}
           </tbody>

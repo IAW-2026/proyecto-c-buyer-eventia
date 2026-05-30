@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { eventos } from '@/app/data/eventos';
 import { validarApiKey } from '@/lib/apiKey';
 
+
 export async function POST(request: Request) {
    // Validar api key
       const sellerKey = process.env.SELLER_API_KEY;
@@ -23,7 +24,10 @@ export async function POST(request: Request) {
       { status: 404 }
     );
   }
-
+  //para simular la compra, restamos el stock del evento. 
+  // Luego se hace para evitar problemas de concurrencia desde seller 
+  evento.stock -= cantidad;
+  
   return NextResponse.json({
     idPedido: Math.floor(Math.random() * 1000)+1,
     monto: evento.precio * cantidad,

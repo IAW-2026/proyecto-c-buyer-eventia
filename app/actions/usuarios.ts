@@ -58,15 +58,3 @@ export async function getOrCreateUser() {
   return nuevoUsuario;
 }
 
-//Elimina un usuario de la base de datos.
-
-export async function eliminarUsuario(idUsuario: string) {
-  const admin = await isAdminBuyer();
-  if (!admin) throw new Error("No autorizado");
-
-  await prisma.usuarios.delete({
-    where: { id_usuario: idUsuario },
-  });
-
-  revalidatePath("/admin/usuarios");
-}

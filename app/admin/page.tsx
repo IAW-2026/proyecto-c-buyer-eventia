@@ -196,7 +196,7 @@ export default async function AdminPage() {
             Listar Usuarios
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            Administra los perfiles de los usuarios que operan en el sistema.
+            Listar los usuarios que operan en el sistema.
           </p>
         </Link>
       </div>

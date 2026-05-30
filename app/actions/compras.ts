@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { get } from "http";
 import { getOrCreateUser } from "./usuarios";
+import { eventos } from "../data/eventos";
 
 type ComprarArgs = {
   idEvento: number;
@@ -231,7 +232,13 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
     console.error('Error de la API de Shipping durante la cancelación:', errorMessage);
     throw new Error(`Error al cancelar el pedido en el sistema de shipping: ${errorMessage}`);
   }
-
+  //para el mock voy a decrementar el stock asi es consitente con lo que ve el usuario pero de esto se encargará  seller
+  // Buscamos el objeto del evento en tu arreglo simulado usando el ID de la BD
+  const eventoData = eventos.find((e) => e.idEvento === compra.id_evento);
+  if (eventoData) {
+    // Le sumamos la cantidad devuelta que estaba guardada en la compra
+    eventoData.stock += compra.cantidad;
+  }
   //Eliminar el registro de compra de la base de datos
   await prisma.compras.delete({
     where: { id_pedido: idPedido },

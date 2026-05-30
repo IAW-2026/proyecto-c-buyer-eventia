@@ -50,10 +50,16 @@ type Props = {
       
       //  Si falta autenticación, lo mandamos a loguearse sin perder los datos
       if (error.message === "AUTH_REQUIRED") {
-        // Guardamos la ruta del evento actual junto con la cantidad elegida
-        const URL_Retorno = encodeURIComponent(`/eventos/${idEvento}?cantidad=${cantidad}`);
+        // 1. Obtenemos el dominio base 
+        const baseUrl = process.env.URL_BUYER ?? 'http://localhost:3000/';
+
+        // URL ABSOLUTA COMPLETA que Clerk exige en producción
+        const urlCompletaRetorno = `${baseUrl}eventos/${idEvento}?cantidad=${cantidad}`;
         
-        // Redireccionamos  pantalla de Login 
+        // 3. Encodemos la URL completa
+        const URL_Retorno = encodeURIComponent(urlCompletaRetorno);
+        
+        // 4. Redireccionamos pasándole la URL absoluta a Clerk
         router.push(`/sign-in?redirect_url=${URL_Retorno}`);
         return;
       }

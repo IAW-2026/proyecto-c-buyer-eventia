@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import BusquedaFiltro from "@/app/componentes/BusquedaFiltro";
 
 interface CompraProcesada {
   idPedido: number;
@@ -9,42 +8,24 @@ interface CompraProcesada {
   idEvento: number;
   cantidadComprada: number;
   nombre: string;
+  categoria: string; // ¡Ahora con categoría!
 }
 
 export default function AdminTablaCompras({ compras }: { compras: CompraProcesada[] }) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  
+  // EXTRAER CATEGORÍAS ÚNICAS: Mapeamos las categorías y usamos Set para eliminar duplicados
+  const categoriasDisponibles = Array.from(
+    new Set(compras.map((compra) => compra.categoria).filter(Boolean))
+  );
 
-  // 1. Leer el término de búsqueda actual de la URL para dejarlo escrito si se recarga la página
-  const terminoBusqueda = searchParams.get("search") || "";
-
-  // 2. Función que actualiza la URL cuando el administrador escribe
-  function handleSearch(term: string) {
-    const params = new URLSearchParams(searchParams);
-    
-    if (term) {
-      params.set("search", term);
-    } else {
-      params.delete("search"); // Si borra todo el texto, limpiamos el parámetro de la URL
-    }
-    params.set("page", "1"); // Al hacer una nueva búsqueda, siempre reiniciamos a la página 1
-
-    // Reemplaza la URL de forma reactiva sin recargar toda la página
-    replace(`${pathname}?${params.toString()}`);
-  }
-   return (
+  return (
     <div className="flex flex-col gap-4">
-      {/* Input de Filtro */}
-      <div className="w-full max-w-md">
-        <input
-          type="text"
-          placeholder="Buscar por ID Pedido, Usuario, Evento..."
-          defaultValue={terminoBusqueda} // Importante: defaultValue evita problemas de parpadeo al escribir
-          onChange={(e) => handleSearch(e.target.value)}
-          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
-        />
-      </div>
+      
+      {/* COMPONENTE FILTRO: Ahora le pasamos la lista dinámica de categorías */}
+      <BusquedaFiltro
+        availableCategories={categoriasDisponibles}
+        placeholder="Buscar por ID Pedido, Usuario, Evento..."
+      />
 
       {/* Contenedor de la Tabla Responsiva */}
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -54,14 +35,15 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
               <th className="px-6 py-4">ID Pedido</th>
               <th className="px-6 py-4">Comprador (nombre)</th>
               <th className="px-6 py-4">Evento (ID)</th>
+              <th className="px-6 py-4">Categoría</th>
               <th className="px-6 py-4 text-center">Cantidad</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {compras.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-10 text-center text-slate-400">
-                  No se encontraron compras que coincidan con la búsqueda.
+                <td colSpan={5} className="px-6 py-10 text-center text-slate-400">
+                  No se encontraron compras que coincidan con la búsqueda o los filtros aplicados.
                 </td>
               </tr>
             ) : (
@@ -81,6 +63,12 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
                       <span className="text-xs text-slate-400 font-mono">ID: {compra.idEvento}</span>
                     </div>
                   </td>
+                  {/* Celda de Categoría mapeada */}
+                  <td className="px-6 py-4">
+                    <span className="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800 capitalize">
+                      {compra.categoria}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-center font-semibold text-slate-900">
                     {compra.cantidadComprada}
                   </td>
@@ -92,5 +80,4 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
       </div>
     </div>
   );
-
 }

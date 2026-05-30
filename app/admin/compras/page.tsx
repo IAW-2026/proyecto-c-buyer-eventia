@@ -96,6 +96,7 @@ export default async function ComprasPage({ searchParams }: PageProps) {
         idEvento: compra.id_evento,
         cantidadComprada: compra.cantidad,
         nombre: infoSeller.nombre ,
+        categoria: infoSeller.categoria,
       };
     }
        return null;
@@ -115,7 +116,8 @@ export default async function ComprasPage({ searchParams }: PageProps) {
       compra.idPedido.toString().includes(filtro) ||
       compra.nombreUsuario.toLowerCase().includes(filtro) ||
       compra.nombre.toLowerCase().includes(filtro) ||
-      compra.idEvento.toString().includes(filtro)
+      compra.idEvento.toString().includes(filtro) ||
+      compra.categoria.toLowerCase().includes(filtro)
     );
   });
 

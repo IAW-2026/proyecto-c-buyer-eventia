@@ -55,7 +55,18 @@ export default async function AdminPage() {
             Administrar y visualizar usuarios registrados.
           </p>
         </Link>
-
+        {/* Simulación */}
+        <Link
+          href="/admin/simulacion"
+          className="rounded-2xl border border-dashed border-sky-300 bg-sky-50/40 p-8 shadow-sm transition hover:shadow-md hover:border-sky-400 hover:bg-sky-50"
+        >
+          <h2 className="text-2xl font-semibold text-sky-950">
+            Simulación
+          </h2>
+          <p className="mt-3 text-sm text-sky-800">
+            Simular cancelación usando la API de Buyer.
+          </p>
+        </Link>
       </div>
 
     </main>

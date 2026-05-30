@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { comprar } from '../actions/compras';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type Props = {
   idEvento: number;
@@ -14,7 +14,12 @@ type Props = {
   idEvento,stock,precio
 }: Props) {
   const router = useRouter();
-  const [cantidad, setCantidad] = useState(stock > 0 ? 1 : 0);
+  const searchParams = useSearchParams();
+  // 1. Si en la URL viene una cantidad guardada del login, la ponemos como estado inicial
+  const cantidadInicial = searchParams.get('cantidad') 
+    ? Number(searchParams.get('cantidad')) 
+    : (stock > 0 ? 1 : 0);
+  const [cantidad, setCantidad] = useState(cantidadInicial);
   const [cargando, setCargando] = useState(false);
   
   // Estados para controlar los carteles en pantalla
@@ -41,6 +46,16 @@ type Props = {
 
       if (error.message === "NEXT_REDIRECT") {
         throw error;
+      }
+      
+      //  Si falta autenticación, lo mandamos a loguearse sin perder los datos
+      if (error.message === "AUTH_REQUIRED") {
+        // Guardamos la ruta del evento actual junto con la cantidad elegida
+        const URL_Retorno = encodeURIComponent(`/eventos/${idEvento}?cantidad=${cantidad}`);
+        
+        // Redireccionamos  pantalla de Login 
+        router.push(`/sign-in?redirect_url=${URL_Retorno}`);
+        return;
       }
 
       // Mapeamos los errores técnicos a textos legibles para el usuario

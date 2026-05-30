@@ -7,6 +7,7 @@ type Props = {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 type Evento = {
@@ -41,14 +42,15 @@ async function getEvento(id: string) {
   return res.json() as Promise<Evento>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props){
   const { id } = await params;
-
+  await searchParams; //Forzamos a que el servidor evalúe los cambios de query params al volver
   const evento = await getEvento(id);
 
   if (!evento) {
     notFound();
   }
+  
 
   return (
     <main className="layout-container flex items-start justify-center pt-12">

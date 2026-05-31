@@ -140,7 +140,7 @@ if (fechaFin) {
       {/* Renderizado del componente visual que contiene el input de texto y la lista desplegable */}
       <BusquedaFiltro
         availableCategories={availableCategories}
-        placeholder="Buscar eventos por nombre, ubicación o descripción..."
+        placeholder="Buscar eventos..."
       />
       
       <div className="grid-retro-fluid">

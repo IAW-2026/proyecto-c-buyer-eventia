@@ -21,13 +21,13 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
   return (
     <div className="flex flex-col gap-4">
       
-      {/* COMPONENTE FILTRO: Ahora le pasamos la lista dinámica de categorías */}
+      {/* le pasamos la lista dinámica de categorías */}
       <BusquedaFiltro
         availableCategories={categoriasDisponibles}
         placeholder="Buscar por ID Pedido, Usuario, Evento..."
       />
 
-      {/* Contenedor de la Tabla Responsiva */}
+      {/* Contenedor de la Tabla  */}
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full border-collapse text-left text-sm text-slate-600">
           <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-wider text-slate-700 border-b border-slate-200">
@@ -48,8 +48,9 @@ export default function AdminTablaCompras({ compras }: { compras: CompraProcesad
               </tr>
             ) : (
               compras.map((compra) => (
-                <tr key={compra.idPedido} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-mono text-xs font-bold text-teal-600">
+               
+                <tr key={compra.idPedido} className="hover:bg-surface-container-low transition-colors duration-200">
+                  <td className="px-6 py-4 font-mono text-xs font-semibold text-on-surface-variant/60">
                     #{compra.idPedido}
                   </td>
                   <td className="px-6 py-4">

@@ -6,6 +6,7 @@ import NavBar from "./componentes/NavBar";
 import { isAdminBuyer } from "@/lib/admin";
 import { Climate_Crisis, Bricolage_Grotesque, Manrope } from 'next/font/google';
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

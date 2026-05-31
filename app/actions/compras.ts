@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { get } from "http";
 import { getOrCreateUser } from "./usuarios";
 import { eventos } from "../data/eventos";
+import { revalidatePath } from "next/cache";
+
 
 type ComprarArgs = {
   idEvento: number;
@@ -147,8 +149,8 @@ export async function comprar({
         throw new Error(e.message || 'Error en el servidor de shipping');
       }
     }
-    //revalidatePath(`/eventos/${idEvento}`);
-    //revalidatePath('/mis-eventos');
+    revalidatePath(`/eventos/${idEvento}`);
+    revalidatePath('/mis-eventos');
     return { success: true, idPedido };
   } catch (criticalError: any) {
     // Si algo explota (Prisma, Fetch falló), devolvemos un error anónimo
@@ -243,6 +245,8 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
   await prisma.compras.delete({
     where: { id_pedido: idPedido },
   });
+    revalidatePath(`/eventos/${compra.id_evento}`);
+    revalidatePath('/mis-eventos');
 
   return { success: true };
 }

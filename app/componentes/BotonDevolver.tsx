@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function BotonDevolver({ idPedido }: Props) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition(); //  hook  de Next.js para manejar estados de transición
 
   const handleCancelarPedido = () => {
@@ -24,8 +23,6 @@ export default function BotonDevolver({ idPedido }: Props) {
           throw new Error('Error al cancelar el pedido');
         }
         
-        // Next.js refresca los datos del servidor 
-        router.refresh(); 
       } catch (error: any) {
         alert(error.message || 'Hubo un error al cancelar');
       }

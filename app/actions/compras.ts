@@ -153,6 +153,9 @@ export async function comprar({
     revalidatePath('/mis-eventos');
     return { success: true, idPedido };
   } catch (criticalError: any) {
+    if (criticalError.message === "NEXT_REDIRECT") {
+      throw criticalError;
+    }
     // Si algo explota (Prisma, Fetch falló), devolvemos un error anónimo
     console.error('CRITICAL SERVER ERROR:', criticalError);
     return { success: false, error: 'ERROR_TECNICO' };

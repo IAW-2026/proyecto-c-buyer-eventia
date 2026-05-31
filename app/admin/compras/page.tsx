@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { isAdminBuyer } from '@/lib/admin';
 import AdminTablaCompras from '@/app/componentes/AdminTablaCompras';
 import Paginacion from '@/app/componentes/Paginacion';
-
+import {ShoppingBag} from 'lucide-react';
 
 type EventoSeller = {
   idEvento: number;
@@ -164,18 +164,31 @@ export default async function ComprasPage({ searchParams }: PageProps) {
   const comprasPagina = comprasFiltradas.slice(inicio, fin);
   
    return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Panel Admin: Control de Compras</h1>
-        <p className="mt-2 text-sm text-slate-600">
+    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10 bg-background text-on-background">
+      {/* Header */}
+      <div className="flex flex-col gap-1 border-b border-primary/10 pb-5">
+     <span className="inline-flex items-center gap-1 text-on-secondary-container text-label-sm font-bold uppercase tracking-widest bg-secondary-container px-2.5 py-0.5 rounded-full w-fit">
+      <ShoppingBag className="w-3.5 h-3.5" /> Finanzas
+    </span>
+        <h1 className="text-headline-md md:text-headline-lg text-primary mt-1">
+          Panel Admin: Control de Compras
+        </h1>
+        <p className="text-body-md text-on-surface-variant/80 font-medium">
           Listado global de transacciones y órdenes generadas en la plataforma.
         </p>
       </div>
       
-      {/* Enviamos los datos procesados a la tabla interactiva del cliente */}
-      <AdminTablaCompras compras={comprasPagina} />
-       {/*  nuevo componente reutilizable de paginación separado abajo */}
-    <Paginacion totalPaginas={totalPaginas} />
+      {/* Tabla  */}
+      <div className="w-full">
+        <AdminTablaCompras compras={comprasPagina} />
+      </div>
+      
+      {/* Paginación  */}
+      {totalPaginas > 1 && (
+        <div className="flex justify-center mt-2">
+          <Paginacion totalPaginas={totalPaginas} />
+        </div>
+      )}
     </main>
   );
   

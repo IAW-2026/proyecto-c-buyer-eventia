@@ -30,13 +30,14 @@ export async function comprar({
      const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000/';
      const paymentsUrl = process.env.URL_PAYMENTS ?? 'http://localhost:3000/';
      const shippingUrl = process.env.URL_SHIPPING ?? 'http://localhost:3000/';
-
+    try{
     //obtener y asegurar el usuario en la BD
     const usuario = await getOrCreateUser();
     
     //control de cantidad para evitar que se hagan pedidos con cantidades no válidas
      if (!Number.isInteger(cantidad) || cantidad <= 0) {
-    throw new Error('Cantidad inválida');
+      //Devolvemos un objeto de error controlado
+      return { success: false, error: 'Cantidad inválida' };
     }
     const sellerKey = process.env.SELLER_API_KEY;
     //hago el POST a seller para crear el pedido
@@ -59,21 +60,21 @@ export async function comprar({
     );
     //extraer error para mostrar lo correcto en la pantalla del cliente
     if (!respuestaSeller.ok) {
-    try {
-      const errorData = await respuestaSeller.json();
-      // Si el error contiene frases clave, lanzamos un mensaje amigable
-      if (errorData?.error?.includes("Stock insuficiente") || errorData?.error === "STOCK_INSUFICIENTE") {
-        throw new Error('ENTRADAS_AGOTADAS');
+      // Extraer error controlado
+      try {
+        const errorData = await respuestaSeller.json();
+        // Mapeamos los errores técnicos a códigos
+        if (errorData?.error?.includes("Stock insuficiente") || errorData?.error === "STOCK_INSUFICIENTE") {
+          return { success: false, error: 'ENTRADAS_AGOTADAS' };
+        }
+        if (errorData?.error?.includes("Evento no encontrado") || errorData?.error === "EVENTO_NO_ENCONTRADO") {
+          return { success: false, error: 'EVENTO_NO_ENCONTRADO' };
+        }
+        return { success: false, error: errorData?.error || 'Error creando el pedido' };
+      } catch (e: any) {
+        return { success: false, error: e.message || 'Error en el servidor de pedidos' };
       }
-      if (errorData?.error?.includes("Evento no encontrado") || errorData?.error === "EVENTO_NO_ENCONTRADO") {
-        throw new Error('EVENTO_NO_ENCONTRADO');
-      }
-      throw new Error(errorData?.error || 'Error creando el pedido');
-    } catch (e: any) {
-      // Si no es un JSON válido lo que devolvió, pasamos el error tal cual
-      throw new Error(e.message || 'Error en el servidor de pedidos');
     }
-  }
     const data = await respuestaSeller.json();
     const { idPedido, monto } = data;
     const paymentsKey = process.env.PAYMENTS_API_KEY;
@@ -146,8 +147,14 @@ export async function comprar({
         throw new Error(e.message || 'Error en el servidor de shipping');
       }
     }
-
-    return { ok: true, idPedido};
+    //revalidatePath(`/eventos/${idEvento}`);
+    //revalidatePath('/mis-eventos');
+    return { success: true, idPedido };
+  } catch (criticalError: any) {
+    // Si algo explota (Prisma, Fetch falló), devolvemos un error anónimo
+    console.error('CRITICAL SERVER ERROR:', criticalError);
+    return { success: false, error: 'ERROR_TECNICO' };
+  }
 }
 
 //Server Action para cancelar un pedido
@@ -231,13 +238,6 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
     }
     console.error('Error de la API de Shipping durante la cancelación:', errorMessage);
     throw new Error(`Error al cancelar el pedido en el sistema de shipping: ${errorMessage}`);
-  }
-  //para el mock voy a decrementar el stock asi es consitente con lo que ve el usuario pero de esto se encargará  seller
-  // Buscamos el objeto del evento en tu arreglo simulado usando el ID de la BD
-  const eventoData = eventos.find((e) => e.idEvento === compra.id_evento);
-  if (eventoData) {
-    // Le sumamos la cantidad devuelta que estaba guardada en la compra
-    eventoData.stock += compra.cantidad;
   }
   //Eliminar el registro de compra de la base de datos
   await prisma.compras.delete({

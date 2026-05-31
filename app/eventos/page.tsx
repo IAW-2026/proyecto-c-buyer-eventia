@@ -131,37 +131,43 @@ if (fechaFin) {
   const availableCategories = Array.from(new Set(eventos.map((evento: any) => evento.categoria as string)));
 
   return (
-    <main className="layout-container">
-    
-      <h1 className="text-headline-lg-mobile md:text-headline-lg text-secondary mb-8">
-        Eventos
-      </h1>
+   <main className="layout-container">
+    <h1 className="text-headline-lg-mobile md:text-headline-lg text-secondary mb-8">
+      Eventos
+    </h1>
 
-      {/* Renderizado del componente visual que contiene el input de texto y la lista desplegable */}
-      <BusquedaFiltro
-        availableCategories={availableCategories}
-        placeholder="Buscar eventos por nombre, ubicación o descripción..."
-      />
-      
-      <div className="grid-retro-fluid">
-        {/* Acá mapeamos únicamente los 6 eventos recortados para esta página actual */}
-        {eventosPagina.length === 0 ? (
-          <p className="text-center text-gray-500 col-span-full">
-            No se encontraron eventos con los filtros aplicados.
-          </p>
-        ) : ( 
-          eventosPagina.map((evento: any) => (
-            <div key={evento.idEvento} className="col-span-4 sm:col-span-2 md:col-span-4 lg:col-span-3">
-              <EventoCard evento={evento} />
-            </div>
-          ))
-        )}
-      </div> 
-      
-      {/*COMPONENTE VISUAL DE PAGINACIÓN:
-        Le pasamos el número total de páginas para que el usuario pueda hacer click para cambiar la URL y navegar.
-      */}
-      <Paginacion totalPaginas={totalPaginas} />
-    </main>
+    {/* Renderizado del componente visual que contiene el input de texto y la lista desplegable */}
+    <BusquedaFiltro
+      availableCategories={availableCategories}
+      placeholder="Buscar eventos..."
+    />
+  
+  {/* Ajustamos los spans de la grilla para que se acomoden en filas de 3  */}
+  <div className="grid-retro-fluid">
+    {eventosPagina.length === 0 ? (
+      <p className="text-center text-gray-500 col-span-full font-medium py-8">
+        No se encontraron eventos con los filtros aplicados.
+      </p>
+    ) : ( 
+      eventosPagina.map((evento: any) => (
+        /* - En pantallas chicas ocupa todo el ancho completo.
+          - En pantallas medianas se divide en 2 columnas por fila.
+          - En pantallas grandes  pasa a col-span-4, lo que es  3 tarjetas perfectas por fila.
+        */
+        <div 
+          key={evento.idEvento} 
+          className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-4 flex justify-center"
+        >
+          <EventoCard evento={evento} />
+        </div>
+      ))
+    )}
+  </div> 
+  
+      {/* COMPONENTE VISUAL DE PAGINACIÓN */}
+      <div className="mt-8">
+        <Paginacion totalPaginas={totalPaginas} />
+      </div>
+</main>
   );
 }

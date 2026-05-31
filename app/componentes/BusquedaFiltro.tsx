@@ -1,9 +1,9 @@
 'use client';
-
+import { ChevronDown } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce'; 
-
+import { Search } from 'lucide-react';
 interface SearchFilterProps {
   availableCategories: string[];
   placeholder: string;
@@ -54,25 +54,38 @@ export default function SearchFilter({ availableCategories, placeholder }: Searc
     <div className="flex flex-col gap-4 mb-8">
       {/* Fila principal: Buscador y Categoría */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Todas las categorías</option>
-          {availableCategories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+        
+        {/* 🔍 CONTENEDOR DEL INPUT: Con relative para posicionar la lupa */}
+        <div className="flex-grow relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            // Agregamos pl-10 para correr el texto "Buscar eventos..." a la derecha y no pisar la lupa
+            className="w-full pl-10 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/*CONTENEDOR DEL SELECT*/}
+        <div className="text-gray-400 w-5 relative min-w-[200px]">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            // appearance-none elimina la flechita negra por defecto. pr-10 da espacio para que no se pise el texto.
+            className="w-full p-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-transparent cursor-pointer"
+          >
+            <option value="">Todas las categorías</option>
+            {availableCategories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant w-5 h-5 opacity-60" />
+        </div>
+
       </div>
 
       {/* NUEVA FILA: Inputs de rango de fechas */}

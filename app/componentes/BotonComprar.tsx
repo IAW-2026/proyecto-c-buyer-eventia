@@ -58,91 +58,75 @@ type Props = {
 
   const botonDeshabilitado = cantidad <= 0 || cargando || stock === 0;
   return (
-    <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50/50 p-5 shadow-sm space-y-4"> 
-      
-      {/*Ocultamos los controles si la compra ya fue un éxito */}
-      {!mensajeExito && (
-        <>
-          {/* Selector de cantidad estilizado */}
-          {stock > 0 && (
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-semibold text-slate-700">Cantidad de entradas:</label>
-              <input
-                type="number"
-                min={stock > 0 ? 1 : 0}
-                max={stock}
-                value={cantidad}
-                onChange={(e) => setCantidad(Number(e.target.value))}
-                className="w-20 rounded-lg border border-slate-300 px-3 py-1.5 text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white"
-              />
-            </div>
-          )}
-
-          {/*Renderizado del total a pagar */}
-          {stock > 0 && (
-            <div className="border-t border-slate-200/60 pt-3 flex items-center justify-between text-slate-900">
-              <span className="text-sm font-medium text-slate-500">Total a pagar:</span>
-              <span className="text-xl font-black text-slate-900">
-                ${precioTotal.toLocaleString('es-AR')}
-              </span>
-            </div>
-          )}
-
-          {/* Botón Comprar */}
-          <button 
-            onClick={handleComprar} 
-            disabled={botonDeshabilitado}
-            className="
-              w-full
-              rounded-lg
-              border
-              border-slate-300
-              bg-slate-900
-              px-4
-              py-2.5
-              text-sm
-              font-semibold
-              text-white
-              transition
-              shadow-sm
-              hover:bg-slate-700 
-              disabled:cursor-not-allowed
-              disabled:bg-slate-300
-              disabled:text-slate-500
-              disabled:border-slate-300
-            " 
-          >
-            {cargando ? 'Procesando compra...' : stock > 0 ? 'Comprar Entradas' : 'Agotado'}
-          </button>
-        </>
-      )}
-
-      {/* CARTEL DE ÉXITO */}
-      {mensajeExito && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 animate-fadeIn">
-          <div className="flex flex-col gap-1.5">
-            <span className="font-bold text-base"> ¡Pedido realizado con éxito!</span>
-            <p className="text-xs text-emerald-800">
-              Tu pedido <span className="font-mono font-bold">#{mensajeExito.idPedido}</span> fue procesado.
-            </p>
-            <Link 
-              href="/mis-eventos" 
-              className="mt-2 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 transition w-full shadow-sm"
-            >
-              Ver mi entrada en "Mis Eventos"
-            </Link>
+  <div className="card-retro w-full max-w-sm bg-surface-container-low p-5 space-y-4"> 
+    {/* Ocultamos los controles si la compra ya fue un éxito */}
+    {!mensajeExito && (
+      <>
+        {/* Selector de cantidad  */}
+        {stock > 0 && (
+          <div className="flex items-center justify-between">
+            <label className="label-retro text-sm font-bold !mb-0">Cantidad de entradas:</label>
+            <input
+              type="number"
+              min={stock > 0 ? 1 : 0}
+              max={stock}
+              value={cantidad}
+              onChange={(e) => setCantidad(Number(e.target.value))}
+              className="input-retro w-20 text-center font-bold focus:ring-[#650003] focus:border-[#650003]"
+            />
           </div>
-        </div>
-      )}
+        )}
 
-      {/* CARTEL DE ERROR */}
-      {mensajeError && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-950 text-xs font-medium animate-fadeIn">
-          ❌ {mensajeError}
-        </div>
-      )}
+        {/* Renderizado del total a pagar */}
+        {stock > 0 && (
+          <div className="border-t border-primary/10 pt-3 flex items-center justify-between text-on-background">
+            <span className="text-sm font-label font-bold text-on-surface-variant/80">Total a pagar:</span>
+            {/* Resaltamos el precio  */}
+            <span className="text-2xl font-black text-primary tracking-tight">
+              ${precioTotal.toLocaleString('es-AR')}
+            </span>
+          </div>
+        )}
 
-    </div>
+        {/* Botón Comprar*/}
+        <button 
+          onClick={handleComprar} 
+          disabled={botonDeshabilitado}
+          className="btn-retro-primary w-full py-3 text-sm uppercase tracking-wider font-label font-bold cursor-pointer" 
+        >
+          {cargando ? 'Procesando compra...' : stock > 0 ? 'Comprar Entradas' : 'Agotado'}
+        </button>
+      </>
+    )}
+
+    {/* CARTEL DE ÉXITO  */}
+    {mensajeExito && (
+      <div className="rounded-xl border border-emerald-600/20 bg-emerald-500/10 p-4 text-emerald-900 animate-fadeIn font-body">
+        <div className="flex flex-col gap-1.5">
+          <span className="font-label font-bold text-base text-emerald-800 flex items-center gap-1.5"> 
+            ¡Pedido realizado con éxito!
+          </span>
+          <p className="text-xs text-emerald-900/80 font-medium">
+            Tu pedido <span className="font-mono font-bold bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-900">#{mensajeExito.idPedido}</span> fue procesado.
+          </p>
+          <Link 
+            href="/mis-eventos" 
+            className="mt-2 inline-flex items-center justify-center rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2.5 text-xs font-label font-bold uppercase tracking-wider transition shadow-sm active:scale-[0.98]"
+          >
+            Ver mi entrada en "Mis Eventos"
+          </Link>
+        </div>
+      </div>
+    )}
+
+    {/* CARTEL DE ERROR */}
+    {mensajeError && (
+      <div className="rounded-xl border border-rose-600/20 bg-rose-500/10 p-4 text-rose-950 text-xs font-label font-bold animate-fadeIn">
+        ❌ {mensajeError}
+      </div>
+    )}
+
+  </div>
   );
   
 }

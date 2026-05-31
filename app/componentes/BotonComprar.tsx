@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { comprar } from '../actions/compras';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { refresh } from 'next/cache';
 
 type Props = {
   idEvento: number;
@@ -29,34 +30,40 @@ type Props = {
     setCargando(true);
     setMensajeError(null);
     setMensajeExito(null);
-    try {
-      const resultado = await comprar({ idEvento, cantidad });
-      // Si sale todo bien, guardamos los datos del éxito
-      setMensajeExito({ idPedido: resultado.idPedido });
-      // Forzamos a Next.js a refrescar los Server Components
-      // Esto va a hacer que la página del evento vuelva a leer el stock de la API (que ahora restó)
-      router.refresh();
-    } catch (error: any) {
-      console.error(error);
+   try {
+    const resultado = await comprar({ idEvento, cantidad });
 
-      if (error.message === "NEXT_REDIRECT") {
-        throw error;
-      }
-
-      // Mapeamos los errores técnicos a textos legibles para el usuario
-      if (error.message === "ENTRADAS_AGOTADAS" || error.message === "STOCK_INSUFICIENTE") {
+    // Verificamos si la operación falló
+    if (!resultado.success) {
+      console.error('Server error received:', resultado.error);
+      
+      // Mapeamos los códigos de error controlados
+      if (resultado.error === "ENTRADAS_AGOTADAS") {
         setMensajeError("¡Lo sentimos! No hay suficientes entradas disponibles en este momento.");
-      } else if (error.message === "EVENTO_NO_ENCONTRADO") {
+      } else if (resultado.error === "EVENTO_NO_ENCONTRADO") {
         setMensajeError("El evento que intentas comprar ya no se encuentra disponible.");
+      } else if (resultado.error === "ERROR_TECNICO") {
+        setMensajeError("Hubo un problema técnico al procesar tu pago. Inténtalo de nuevo.");
       } else {
-        setMensajeError(error.message || "Hubo un problema al procesar tu pago. Inténtalo de nuevo.");
+        setMensajeError(resultado.error || "Hubo un problema al procesar tu pago. Inténtalo de nuevo.");
       }
-    } finally {
       setCargando(false);
+      return;
     }
-  }
 
-  const botonDeshabilitado = cantidad <= 0 || cargando || stock === 0;
+    // Si sale todo bien
+    setMensajeExito({ idPedido: resultado.idPedido });
+    // Esto va a hacer que la página del evento vuelva a leer el stock de la API (que ahora restó)
+      router.refresh(); 
+  } catch (error: any) {
+    // Este catch atrapa fallos de red  (ej: Vercel no encuentra la Server Action)
+    console.error('Error catastrófico en cliente:', error);
+    setMensajeError("Hubo un problema de conexión inesperado. Inténtalo de nuevo.");
+  } finally {
+    setCargando(false);
+  }
+}
+  const botonDeshabilitado = cantidad <= 0 || cargando || stock === 0; 
   return (
   <div className="w-full flex flex-col gap-6"> 
     {/* Ocultamos los controles si la compra ya fue un éxito */}

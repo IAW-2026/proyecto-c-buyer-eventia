@@ -26,52 +26,58 @@ export default function Paginacion({ totalPaginas }: PaginacionProps) {
   }
 
   return (
-    <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3 sm:px-6 rounded-xl shadow-sm mt-4">
-      {/* Vista Mobile (Botones simplificados) */}
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          disabled={paginaActual <= 1}
-          onClick={() => cambiarPagina(paginaActual - 1)}
-          className="disabled:opacity-40 relative inline-flex items-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-opacity"
-        >
-          Anterior
-        </button>
-        <button
-          disabled={paginaActual >= totalPaginas}
-          onClick={() => cambiarPagina(paginaActual + 1)}
-          className="disabled:opacity-40 relative ml-3 inline-flex items-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-opacity"
-        >
-          Siguiente
-        </button>
-      </div>
+    <div className="flex items-center justify-between bg-transparent px-5 py-4 mt-8 max-w-6xl mx-auto w-full font-body">
+    {/* Vista Mobile (Botones */}
+    <div className="flex flex-1 justify-between sm:hidden w-full">
+      <button
+        disabled={paginaActual <= 1}
+        onClick={() => cambiarPagina(paginaActual - 1)}
+        className="disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed relative inline-flex items-center rounded-xl bg-[#650003] text-[#fe9ea2] px-5 py-2.5 text-xs font-label font-bold uppercase tracking-wider transition-all hover:bg-[#650003]/90 active:scale-95"
+      >
+        Anterior
+      </button>
+      <button
+        disabled={paginaActual >= totalPaginas}
+        onClick={() => cambiarPagina(paginaActual + 1)}
+        className="disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed relative inline-flex items-center rounded-xl bg-[#650003] text-[#fe9ea2] px-5 py-2.5 text-xs font-label font-bold uppercase tracking-wider transition-all hover:bg-[#650003]/90 active:scale-95"
+      >
+        Siguiente
+      </button>
+    </div>
 
-      {/* Vista Desktop (Con indicador de página) */}
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-slate-700">
-            Mostrando página <span className="font-medium">{paginaActual}</span> de{" "}
-            <span className="font-medium">{totalPaginas}</span>
-          </p>
-        </div>
-        <div>
-          <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-            <button
-              disabled={paginaActual <= 1}
-              onClick={() => cambiarPagina(paginaActual - 1)}
-              className="disabled:opacity-40 relative inline-flex items-center rounded-l-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 transition-opacity"
-            >
-              Anterior
-            </button>
-            <button
-              disabled={paginaActual >= totalPaginas}
-              onClick={() => cambiarPagina(paginaActual + 1)}
-              className="disabled:opacity-40 relative inline-flex items-center rounded-r-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 transition-opacity"
-            >
-              Siguiente
-            </button>
-          </nav>
-        </div>
+    {/* Vista Desktop (Con indicador de página) */}
+    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between w-full">
+      <div>
+        <p className="text-sm font-medium text-[#650003]/80">
+          Mostrando página{" "}
+          <span className="font-bold text-[#650003] bg-[#fe9ea2]/40 px-2.5 py-1 rounded-md mx-0.5">
+            {paginaActual}
+          </span>{" "}
+          de <span className="font-bold text-[#650003]">{totalPaginas}</span>
+        </p>
+      </div>
+      
+      <div>
+        <nav className="inline-flex gap-2" aria-label="Pagination">
+          <button
+            disabled={paginaActual <= 1}
+            onClick={() => cambiarPagina(paginaActual - 1)}
+            className="disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#650003] disabled:cursor-not-allowed relative inline-flex items-center rounded-xl border-2 border-[#650003] bg-transparent px-4 py-2 text-xs font-label font-bold uppercase tracking-wider text-[#650003] transition-all hover:bg-[#650003] hover:text-[#fe9ea2] active:scale-95"
+          >
+            Anterior
+          </button>
+          
+          <button
+            disabled={paginaActual >= totalPaginas}
+            onClick={() => cambiarPagina(paginaActual + 1)}
+            className="disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#650003] disabled:cursor-not-allowed relative inline-flex items-center rounded-xl border-2 border-[#650003] bg-[#650003] px-4 py-2 text-xs font-label font-bold uppercase tracking-wider text-[#fe9ea2] transition-all hover:bg-[#650003]/90 active:scale-95"
+          >
+            Siguiente
+          </button>
+        </nav>
       </div>
     </div>
-  );
+
+  </div>
+);
 }

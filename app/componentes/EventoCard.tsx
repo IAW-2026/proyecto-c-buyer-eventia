@@ -43,10 +43,16 @@ export default function EventoCard({ evento }: Props) {
         </div>
 
       <div className="p-3">
-        <span className="mb-2 inline-flex rounded-full bg-[#fe9ea2] text-[#650003] px-3 py-1 text-[11px] font-label font-bold uppercase tracking-wider">
-          {evento.categoria}
-        </span>
-        {/* ¡Aquí estaba el error! Corregido con comillas invertidas */}
+      <span
+        className="mb-2 inline-flex rounded-full px-3 py-1 text-[11px] font-semibold"
+        style={{
+          background: 'var(--color-secondary-container)',
+          color: 'var(--color-on-secondary-container)',
+        }}
+      >
+        {evento.categoria}
+      </span>
+  
         <h3 className={`mb-2 text-lg font-bold ${ptSerif.className}`} style={{ color: 'var(--color-primary)' }}>
           {evento.nombre ?? 'Sin nombre'}
         </h3>
@@ -62,9 +68,6 @@ export default function EventoCard({ evento }: Props) {
           <span>   {evento.ubicacion ?? 'Sin ubicación'}</span>
         </li>
 
-
-         
-        
 
         {/* Fecha */}
         <li className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 text-sm text-slate-700">

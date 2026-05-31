@@ -45,7 +45,7 @@ type Props = {
 
       // Mapeamos los errores técnicos a textos legibles para el usuario
       if (error.message === "ENTRADAS_AGOTADAS" || error.message === "STOCK_INSUFICIENTE") {
-        setMensajeError("¡Lo sentimos! Ya no quedan entradas disponibles para este evento.");
+        setMensajeError("¡Lo sentimos! No hay suficientes entradas disponibles en este momento.");
       } else if (error.message === "EVENTO_NO_ENCONTRADO") {
         setMensajeError("El evento que intentas comprar ya no se encuentra disponible.");
       } else {

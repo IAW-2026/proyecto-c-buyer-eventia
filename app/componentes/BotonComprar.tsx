@@ -55,6 +55,7 @@ type Props = {
     setMensajeExito({ idPedido: resultado.idPedido });
    
   } catch (error: any) {
+    if (error.message === "NEXT_REDIRECT") throw error;
     // Este catch atrapa fallos de red  (ej: Vercel no encuentra la Server Action)
     console.error('Error catastrófico en cliente:', error);
     setMensajeError("Hubo un problema de conexión inesperado. Inténtalo de nuevo.");

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 interface CarruselImagenesProps {
   imagenes: string[];
@@ -30,58 +32,66 @@ export default function CarruselImagenes({ imagenes, nombreEvento }: CarruselIma
   };
 
   return (
-    <div className="space-y-4">
+    <div className="w-full h-fit flex flex-col gap-4">
+      
       {/* Contenedor de la Imagen Principal */}
-      <div className="relative h-80 md:h-[420px] w-full overflow-hidden rounded-xl border border-primary/10 bg-black group shadow-sm">
-        <img
+      <div className="relative h-[300px] sm:h-[400px] md:h-[450px] w-full overflow-hidden rounded-xl border border-primary/10 bg-black group shadow-sm">
+        <Image
           src={imagenes[imagenActiva]}
           alt={`${nombreEvento} - Imagen ${imagenActiva + 1}`}
-          className="h-full w-full object-cover transition-all duration-500 ease-in-out"
+          fill
+          priority={true}
+          sizes="(max-w-1024px) 100vw, 50vw"
+          className="object-cover transition-all duration-500 ease-in-out"
         />
         
-        {/* CONTROLES LIMPIOS: Solo los símbolos < y > finitos y sin fondos */}
+        {/* Controles */}
         {imagenes.length > 1 && (
           <>
             <button
               onClick={irAAnterior}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-light text-white/60 hover:text-white transition-all duration-200 select-none active:scale-95 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-              aria-label="Imagen anterior"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-all duration-200 select-none active:scale-95 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] cursor-pointer z-10"
+              aria-label="Ir a la imagen anterior"
             >
-              &lt;
+              <ChevronLeft className="h-9 w-9 stroke-[1.5]" />
             </button>
             <button
               onClick={irASiguiente}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-3xl font-light text-white/60 hover:text-white transition-all duration-200 select-none active:scale-95 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-              aria-label="Siguiente imagen"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-all duration-200 select-none active:scale-95 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] cursor-pointer z-10"
+              aria-label="Ir a la siguiente imagen"
             >
-              &gt;
+              <ChevronRight className="h-9 w-9 stroke-[1.5]" />
             </button>
           </>
         )}
 
         {/* Indicador Numérico Flotante */}
-        <div className="absolute bottom-4 right-4 rounded-md bg-black/40 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 rounded-md bg-black/40 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm z-10">
           {imagenActiva + 1} / {imagenes.length}
         </div>
       </div>
 
-      {/* Miniaturas Inferiores (Solo si hay múltiples imágenes) */}
+      {/* Miniaturas Inferiores */}
       {imagenes.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
-          {imagenes.map((url, index) => (
+        <div className="flex gap-3 overflow-x-auto overflow-y-hidden py-1 w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {imagenes.map((url: string, index: number) => (
             <button
               key={url + index}
               onClick={() => setImagenActiva(index)}
-              className={`relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg border transition-all duration-300 ${
+              className={`relative h-16 w-24 md:h-20 md:w-28 flex-shrink-0 overflow-hidden rounded-lg border transition-all duration-300 cursor-pointer ${
                 index === imagenActiva
                   ? 'border-primary ring-2 ring-primary/35 scale-95 opacity-100'
                   : 'border-primary/10 opacity-60 hover:opacity-90'
               }`}
+              aria-label={`Ver imagen miniatura ${index + 1}`}
             >
-              <img
+              <Image
                 src={url}
-                alt={`Miniatura ${index + 1}`}
-                className="h-full w-full object-cover"
+                alt={`Miniatura del evento ${index + 1}`}
+                fill
+                sizes="(max-w-768px) 96px, 112px"
+                loading="lazy"
+                className="object-cover"
               />
             </button>
           ))}

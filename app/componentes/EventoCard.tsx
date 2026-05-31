@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { CalendarDays, MapPin, Ticket } from 'lucide-react'; 
 import { ptSerif } from '../fonts';
-
+import Image from 'next/image';
 
 type Evento = {
   idEvento: number;
@@ -27,20 +27,23 @@ export default function EventoCard({ evento }: Props) {
       <div className="w-full max-w-[21rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
        
     
-        {/* Renderizado Condicional de la Imagen */}
-        <div className="relative h-44 w-full overflow-hidden rounded-xl border border-primary/5 bg-primary-container/15 flex items-center justify-center text-primary">
-          {primeraImagen ? (
-            <img
-              src={primeraImagen}
-              alt={evento.nombre ?? 'Imagen del evento'}
-              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-            />
-          ) : (
-            <span className="text-label-lg uppercase tracking-widest opacity-60">
-              Sin imagen
-            </span>
-          )}
-        </div>
+        {/* Contenedor de la Imagen - Mantenemos tus clases intactas */}
+      <div className="relative h-44 w-full overflow-hidden rounded-xl border border-primary/5 bg-primary-container/15 flex items-center justify-center text-primary">
+        {primeraImagen ? (
+          <Image
+            src={primeraImagen}
+            alt={evento.nombre ?? 'Imagen del evento'}
+            fill // Hace que la imagen ocupe todo el contenedor relativo de 44 de alto
+            sizes="(max-w-768px) 100vw, 33vw" //Le dice a Next qué tamaño de imagen descargar según la pantalla
+            className="object-cover transition-transform duration-300 hover:scale-105"
+            loading="lazy" // Carga diferida para que no impacte al inicio
+          />
+        ) : (
+          <span className="text-label-lg uppercase tracking-widest opacity-60">
+            Sin imagen
+          </span>
+        )}
+      </div>
 
       <div className="p-3">
       <span
@@ -92,12 +95,17 @@ export default function EventoCard({ evento }: Props) {
         </ul>
         {/* Botón */}
         <div className="flex justify-center gap-2 p-3">
+
           <Link
-            href={`/eventos/${evento.idEvento}`}
-            //className="btn-retro-primary inline-flex w-full items-center justify-center"
-          >
-            Ver evento
-          </Link>
+          href={`/eventos/${evento.idEvento}`}
+          className="inline-flex w-full items-center justify-center rounded-xl py-2.5 text-center text-sm font-semibold transition hover:opacity-90 active:scale-[0.98]"
+          style={{
+            background: 'var(--color-secondary-container)',
+            color: 'var(--color-on-secondary-container)',
+          }}
+        >
+          Ver evento
+        </Link>
         </div>
       </div>
   );

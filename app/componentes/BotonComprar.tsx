@@ -14,7 +14,7 @@ type Props = {
  export default function BotonComprar({
   idEvento,stock,precio
 }: Props) {
-  const router = useRouter();
+  
   const [cantidad, setCantidad] = useState(stock > 0 ? 1 : 0);
   const [cargando, setCargando] = useState(false);
   
@@ -53,8 +53,7 @@ type Props = {
 
     // Si sale todo bien
     setMensajeExito({ idPedido: resultado.idPedido });
-    // Esto va a hacer que la página del evento vuelva a leer el stock de la API (que ahora restó)
-      router.refresh(); 
+   
   } catch (error: any) {
     // Este catch atrapa fallos de red  (ej: Vercel no encuentra la Server Action)
     console.error('Error catastrófico en cliente:', error);

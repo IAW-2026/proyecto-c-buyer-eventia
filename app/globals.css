@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   1. VARIABLES DEL SISTEMA (Design Tokens) - Tailwind v4 Style
+   ========================================================================== */
+@theme {
+  /* Fuentes del sistema vinculadas a tus variables de Next.js */
+  --font-display: var(--font-climate);
+  --font-body: var(--font-bricolage), sans-serif;
+  --font-label: var(--font-manrope), sans-serif;
+
+  /* Paleta de colores Retro-Flow (Sobrescribimos las por defecto) */
+  --color-background: #fff9ea;
+  --color-on-background: #1d1c13;
+  --color-surface: #fff9ea;
+  --color-surface-dim: #dfdacb;
+  --color-surface-bright: #fff9ea;
+  --color-surface-variant: #e8e2d3;
+  --color-on-surface: #1d1c13;
+  --color-on-surface-variant: #59413e;
+  
+  /* Capas tonales de contenedores */
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f9f3e4;
+  --color-surface-container: #f3eddf;
+  --color-surface-container-high: #eee8d9;
+  --color-surface-container-highest: #e8e2d3;
+
+  /* Identidades */
+  --color-primary: #650003;
+  --color-primary-container: #8b100e;
+  --color-on-primary-container: #ff9588;
+  
+  --color-secondary: #93474c;
+  --color-secondary-container: #fe9ea2;
+  --color-on-secondary-container: #793338;
+  
+  --color-tertiary-container: #574028;
+  --color-on-tertiary-container: #ccac8e;
+
+  /* Radios de bordes (Estricto 24px para el XL orgánico) */
+  --radius-xl: 1.5rem;
+
+  /* Elevación: El "Soft Ambient" glow color oxblood al 8% */
+  --shadow-soft-ambient: 0 4px 32px 0 rgba(139, 16, 14, 0.08);
+
+  /* Espaciados semánticos */
+  --spacing-gutter: 24px;
+  --spacing-section-gap: 80px;
+  --spacing-mobile-padding: 20px;
+  --spacing-desktop-padding: 64px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ==========================================================================
+   2. ESTILOS BASE (Reset & Defaults)
+   ========================================================================== */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   3. COMPONENTES ENCAPSULADOS (Utility Classes)
+   ========================================================================== */
+@utility text-display-lg {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 80px;
+  letter-spacing: -0.02em;
+}
+
+@utility text-headline-lg {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 56px;
+}
+
+@utility text-headline-lg-mobile {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 44px;
+}
+
+@utility text-headline-md {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+}
+
+@utility text-body-lg {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+@utility text-body-md {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+@utility text-label-lg {
+  font-family: var(--font-label);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.05em;
+}
+
+@utility text-label-sm {
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+/* Estructuras y contenedores semánticos */
+@utility layout-container {
+  @apply min-h-screen bg-background text-on-background px-mobile-padding md:px-desktop-padding py-8;
+}
+
+@utility grid-retro-fluid {
+  @apply grid grid-cols-4 md:grid-cols-12 gap-gutter;
+}
+
+@utility card-retro {
+  @apply bg-transparent border border-primary/15 rounded-xl p-6 shadow-soft-ambient transition-all duration-300 hover:border-primary/30;
+}
+
+@utility card-retro-tonal {
+  @apply bg-tertiary-container/10 border border-primary/15 rounded-xl p-6 shadow-soft-ambient;
+}
+
+@utility btn-retro-primary {
+  @apply bg-primary-container text-background text-body-md font-semibold px-6 py-3 rounded-xl shadow-soft-ambient transition-all duration-300 hover:scale-[1.02] hover:bg-primary active:scale-[0.98] disabled:opacity-40;
+}
+
+@utility btn-retro-secondary {
+  @apply bg-secondary-container text-on-secondary-container text-body-md font-semibold px-6 py-3 rounded-xl shadow-soft-ambient transition-all duration-300 hover:scale-[1.02] hover:opacity-95 active:scale-[0.98] disabled:opacity-40;
+}
+
+@utility chip-retro {
+  @apply inline-flex items-center justify-center bg-secondary-container text-on-secondary-container text-label-sm px-3 py-1 rounded-full uppercase tracking-wider font-label font-bold;
+}
+
+@utility input-retro {
+  @apply w-full bg-surface-container-low text-on-surface text-body-md p-3 border border-primary/15 rounded-xl transition-all duration-200 placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary;
+}
+
+@utility label-retro {
+  @apply block text-label-lg text-on-surface-variant mb-1;
 }

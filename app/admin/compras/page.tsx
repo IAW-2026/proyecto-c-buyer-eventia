@@ -45,7 +45,13 @@ export default async function ComprasPage({ searchParams }: PageProps) {
   // Doble verificación de seguridad en el servidor
   const admin = await isAdminBuyer();
   if (!admin) {
-    redirect("/");
+    return(
+     <main className="min-h-screen flex items-center justify-center">
+      <div className="text-center text-slate-700">
+        No tienes permisos para acceder a esta página.
+      </div>
+    </main>
+     );
   }
 
   // Extraer los parámetros de búsqueda y paginación de la URL

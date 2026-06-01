@@ -7,7 +7,13 @@ export default async function Page() {
   // Verificación de seguridad
   const admin = await isAdminBuyer();
   if (!admin) {
-    redirect("/");
+    return(
+     <main className="min-h-screen flex items-center justify-center">
+      <div className="text-center text-slate-700">
+        No tienes permisos para acceder a esta página.
+      </div>
+    </main>
+     );
   }
 
   // Consulta a la base de datos

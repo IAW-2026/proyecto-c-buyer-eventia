@@ -20,10 +20,9 @@ type Evento = {
 };
 
 async function getEvento(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-
+  const sellerUrl =   process.env.URL_SELLER ?? 'http://localhost:3000/';
   const res = await fetch(
-    `${baseUrl}/api/seller/eventos/${id}`,
+    `${sellerUrl}api/seller/eventos/${id}`,
     {
       headers: {
         'x-api-key': process.env.SELLER_API_KEY ?? '',

@@ -2,49 +2,42 @@
 
 # Buyer — Eventia (cliente comprador)
 
-Breve descripción
+Deploy
+------
+URL: https://proyecto-c-buyer-eventia.vercel.app/
 -----------------
+Listado usuarios
+------------------------------
+- Usuario general: Email: buyer+clerktest@iaw.com Contraseña: iawuser#
+- Administrador: admin+clerktest@iaw.com Contraseña: iawuser#
+  Este usuario podrá acceder a `/admin`.
+
 Buyer es la aplicación para compradores en Eventia. Permite explorar eventos, comprar entradas, ver historial de compras, devolver entradas y gestionar roles de usuario.
 
-Funcionalidades de la aplicación - Usuario comprador
+Funcionalidades - Usuario comprador
 --------
 - Cartelera de Eventos: Exploración del listado de eventos consumiendo API de `seller` (los datos de los eventos se encuentran mockeados en data/eventos.ts).
 - Flujo de Compra: Adquisición de entradas consumiendo apis de `seller`, `payments` y `shipping` , guardando los pedidos exitosos o capturando errores para mostrar aviso apropiado.
 - Gestión de Pedidos ("Mis Eventos"): Visualización de eventos adquiridos con opción de devolución dentro de los plazos permitidos.
-- Persistencia de pedidos: Los pedidos se muestran en el listado mientras su pago se encuentra en proceso o termina y es exitoso. Si el pago queda inconcluso, vence o presenta errores, el evento no aparecerá en "Mis Eventos". En estos casos, disponemos de un endpoint para actualizar la base de datos y eliminarlo.
-  
 -----------------
-  
-Funcionalidades de la aplicación - Usuario administrador
+Funcionalidades - Usuario administrador
 --------
 - Posee todas las funcionalidades del usuario comprador, sumando un panel exclusivo de gestión.
 - Dashboard Estadístico: Métricas como el ranking de los eventos más vendidos y las categorías más populares.
 - Auditoría General: Listado global de todos los usuarios y de la totalidad de las compras del sistema con su información detallada.
 
 -----------------
-Simulación vs APIs reales
+Notas
 -------------------------
 - Las integraciones con `payments`, `shipping` y `seller` están simuladas en la carpeta api.
 - La app ya incluye llamadas reales a los servicios `seller`, `payments`, `shipping`  (utilizando variables de entorno que actualmente almacenan el deploy buyer) y en la próxima entrega deberá apuntar a los deploy reales de cada servicio.
 - API Propia: Se expondrá un endpoint propio diseñado para que Seller nos notifique cuando expire el plazo de finalización de una compra (por falta de pago, por ejemplo), permitiéndonos purgar de nuestra base de datos aquellos pedidos que no se concretaron. (api/buyer/pedidoCancelado). 
 - Nota sobre stock: actualmente el stock se refleja en la interfaz durante la compra para que el usuario vea consistencia. Luego el stock estará sincronizado correctamente con  `seller` antes de confirmar compras y luego de realizarlas o de devolver entradas, ya que en el mockeo no se reflejan las modificaciones en datos de los eventos, esto es información de Seller. 
-
-Deploy
-------
-URL: https://proyecto-c-buyer-eventia.vercel.app/
-
-Acceso / Credenciales (prueba)
-------------------------------
-- Usuario general: eventiabuyer@gmail.com 
-- Administrador: admineventia@gmail.com  
-  Este usuario podrá acceder a `/admin`.
-
-Notas de configuración (local)
-----------------------------
+- Persistencia de pedidos: Los pedidos se muestran en el listado mientras su pago se encuentra en proceso o termina y es exitoso. Si el pago queda inconcluso, vence o presenta errores, el evento no aparecerá en "Mis Eventos". En estos casos, disponemos de un endpoint para actualizar la base de datos y eliminarlo.
 
 
 
---------------------
-Enunciado completo: <https://iaw-2026.github.io/proyecto/>
+
+
 
 

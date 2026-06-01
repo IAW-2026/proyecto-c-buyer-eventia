@@ -5,5 +5,6 @@ export async function isAdminBuyer() {
   if (!user) {
     return false;
   }
-  return user.publicMetadata?.role === "adminBuyer";
+  const rolesAdministrador = (user?.publicMetadata?.rolesAdmin as string[]) || [];
+  return rolesAdministrador.includes('adminBuyer');
 }

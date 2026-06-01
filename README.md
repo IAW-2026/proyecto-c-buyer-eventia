@@ -15,8 +15,8 @@ Listado usuarios
 -----------------
 Necesario para evaluar la aplicación
 ------------------------------
-
 - Los eventos listados seran los que tengan una fecha posterior al momento de ingresar, de ser necesario se pueden modificar estas fechas en data/eventos.ts. No vamos a listar los eventos que ya pasaron.
+- Si se quieren devolver entradas, solo es posible dentro de las 48 horas previas al evento, sino figurará en lugar del boton devolver, "no disponible para devolución". La fecha y la hora se ven en el mock data/eventos.ts.
   
 -----------------
 Descripción app

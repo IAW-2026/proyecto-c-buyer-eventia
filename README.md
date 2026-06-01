@@ -8,8 +8,8 @@ URL: https://proyecto-c-buyer-eventia.vercel.app/
 -----------------
 Listado usuarios
 ------------------------------
-- Usuario general: Email: buyer+clerktest@iaw.com Contraseña: iawuser#
-- Administrador: admin+clerktest@iaw.com Contraseña: iawuser#
+- Usuario general: Email: buyer+clerk_test@iaw.com Contraseña: iawuser#
+- Administrador: admin+clerk_test@iaw.com Contraseña: iawuser#
   Este usuario podrá acceder a `/admin`.
 
 -----------------

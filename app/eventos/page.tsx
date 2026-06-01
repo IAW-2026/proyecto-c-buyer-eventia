@@ -15,11 +15,9 @@ type Evento = {
 }; 
 
 async function getEventos() {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const base = process.env.URL_SELLER ?? 'http://localhost:3000/';
   const sellerApiKey = process.env.SELLER_API_KEY;
-  const res = await fetch(`${base}/api/seller/eventos`, { 
+  const res = await fetch(`${base}api/seller/eventos`, { 
     headers: { 'x-api-key': sellerApiKey ?? '' }, 
     cache: 'no-store' 
   });

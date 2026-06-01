@@ -188,9 +188,6 @@ export default async function AdminPage() {
                     <span className="font-label text-sm font-bold text-secondary/50 w-5">#{index + 1}</span>
                     <div className="truncate">
                       <p className="text-body-md font-semibold text-on-surface truncate">{evento.nombre}</p>
-                      <span className="chip-retro text-[9px] px-2 py-0.5 lowercase font-medium bg-surface-container-highest text-on-surface-variant">
-                        {evento.categoria}
-                      </span>
                     </div>
                   </div>
                   <span className="text-label-sm text-primary bg-background border border-primary/10 px-2.5 py-1 rounded-lg whitespace-nowrap font-bold">
@@ -206,7 +203,7 @@ export default async function AdminPage() {
         <div className="card-retro bg-surface-container-lowest">
           <div className="flex items-center gap-2 mb-5 border-b border-primary/5 pb-3">
             <History className="w-4 h-4 text-primary" />
-            <h3 className="font-body font-bold text-base text-on-surface">Volumen por Categoría</h3>
+            <h3 className="font-body font-bold text-base text-on-surface">Volumen por Categorías + vendidas</h3>
           </div>
           <div className="space-y-4">
             {rankingCategorias.length === 0 ? (

@@ -43,6 +43,7 @@ Notas
 - API Propia: Se expondrá un endpoint propio diseñado para que Seller nos notifique cuando expire el plazo de finalización de una compra (por falta de pago, por ejemplo), permitiéndonos purgar de nuestra base de datos aquellos pedidos que no se concretaron. (api/buyer/pedidoCancelado). 
 - Nota sobre stock: actualmente el stock se refleja en la interfaz durante la compra para que el usuario vea consistencia. Luego el stock estará sincronizado correctamente con  `seller` antes de confirmar compras y luego de realizarlas o de devolver entradas, ya que en el mockeo no se reflejan las modificaciones en datos de los eventos, esto es información de Seller. 
 - Persistencia de pedidos: Los pedidos se muestran en el listado "mis eventos" mientras su pago se encuentra en proceso o termina y es exitoso. Si el pago queda inconcluso, vence o presenta errores, el evento no aparecerá en "Mis Eventos". En estos casos, disponemos de un endpoint para actualizar la base de datos y eliminarlo.
+- Por el momento, la busqueda en admin/compras no funciona correctamente al utilizar mayusculas,para ver resultados correctos usar minusculas.
 
 
 

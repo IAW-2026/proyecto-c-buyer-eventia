@@ -180,7 +180,7 @@ export default async function ComprasPage({ searchParams }: PageProps) {
           Panel Admin: Control de Compras
         </h1>
         <p className="text-body-md text-on-surface-variant/80 font-medium">
-          Listado global de transacciones y órdenes generadas en la plataforma.
+          Listado global de eventos adquiridos.
         </p>
       </div>
       

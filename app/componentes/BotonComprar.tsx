@@ -43,9 +43,9 @@ type Props = {
       } else if (resultado.error === "EVENTO_NO_ENCONTRADO") {
         setMensajeError("El evento que intentas comprar ya no se encuentra disponible.");
       } else if (resultado.error === "ERROR_TECNICO") {
-        setMensajeError("Hubo un problema técnico al procesar tu pago. Inténtalo de nuevo.");
+        setMensajeError("Hubo un problema técnico al procesar tu compra. Inténtalo de nuevo.");
       } else {
-        setMensajeError(resultado.error || "Hubo un problema al procesar tu pago. Inténtalo de nuevo.");
+        setMensajeError(resultado.error || "Hubo un problema al procesar tu compra. Inténtalo de nuevo.");
       }
       setCargando(false);
       return;

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 type Evento = {
   idEvento: number;
-  nombre: string;
+  nombreEvento: string;
   descripcion: string;
   fecha: string;
   ubicacion: string;
@@ -32,7 +32,7 @@ export default function EventoCard({ evento }: Props) {
         {primeraImagen ? (
           <Image
             src={primeraImagen}
-            alt={evento.nombre ?? 'Imagen del evento'}
+            alt={evento.nombreEvento ?? 'Imagen del evento'}
             fill // Hace que la imagen ocupe todo el contenedor relativo de 44 de alto
             sizes="(max-w-768px) 100vw, 33vw" //Le dice a Next qué tamaño de imagen descargar según la pantalla
             className="object-cover transition-transform duration-300 hover:scale-105"
@@ -57,7 +57,7 @@ export default function EventoCard({ evento }: Props) {
       </span>
   
         <h3 className={`mb-2 text-lg font-bold ${ptSerif.className}`} style={{ color: 'var(--color-primary)' }}>
-          {evento.nombre ?? 'Sin nombre'}
+          {evento.nombreEvento ?? 'Sin nombre'}
         </h3>
         <p className="text-sm text-slate-600">
            {evento.descripcion ?? 'Sin descripción'}

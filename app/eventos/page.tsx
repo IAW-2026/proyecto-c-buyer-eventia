@@ -4,7 +4,7 @@ import BusquedaFiltro from "../componentes/BusquedaFiltro";
 
 type Evento = {
   idEvento: number;
-  nombre: string;
+  nombreEvento: string;
   descripcion: string;
   fecha: string;
   categoria: string;
@@ -50,7 +50,7 @@ export default async function Page({ searchParams }: EventosPageProps) {
   const pagina = Number(params.page) || 1;
 
   // La fecha del evento debe ser posterior a la actualidad
-  const eventosFuturos = eventos.filter((evento: any) => new Date(evento.fecha) > ahora);
+  const eventosFuturos = eventos.filter((evento: any) => new Date(evento.fecha) >ahora);
   
   /* DEFINIR EL TAMAÑO DE LOS GRUPOS*/
   /* Creamos una copia mutable de los eventos futuros para aplicarle los filtros  */
@@ -63,7 +63,7 @@ export default async function Page({ searchParams }: EventosPageProps) {
   if (searchTerm) {
     eventosFiltrados = eventosFiltrados.filter(
       (evento: any) =>
-        evento.nombre.toLowerCase().includes(searchTerm) ||
+        evento.nombreEvento.toLowerCase().includes(searchTerm) ||
         evento.descripcion.toLowerCase().includes(searchTerm) ||
         evento.ubicacion.toLowerCase().includes(searchTerm)
     );
@@ -127,7 +127,8 @@ if (fechaFin) {
   */
   
   const availableCategories = Array.from(new Set(eventos.map((evento: any) => evento.categoria as string)));
-
+  console.log("Total de eventos filtrados:", totalRegistros);
+console.log("Total de páginas calculadas:", totalPaginas);
   return (
    <main className="layout-container">
     <h1 className="text-headline-lg-mobile md:text-headline-lg text-secondary mb-8">

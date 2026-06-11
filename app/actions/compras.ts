@@ -1,9 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-import { get } from "http";
 import { getOrCreateUser } from "./usuarios";
-import { eventos } from "../data/eventos";
 import { revalidatePath } from "next/cache";
 
 
@@ -14,7 +12,7 @@ type ComprarArgs = {
  
 type EventoSeller = {
   idEvento: number;
-  nombre: string;
+  nombreEvento: string;
   descripcion: string;
   fecha: string;
   categoria: string;
@@ -66,10 +64,10 @@ export async function comprar({
       try {
         const errorData = await respuestaSeller.json();
         // Mapeamos los errores técnicos a códigos
-        if (errorData?.error?.includes("Stock insuficiente") || errorData?.error === "STOCK_INSUFICIENTE") {
-          return { success: false, error: 'ENTRADAS_AGOTADAS' };
+        if (errorData?.error === "STOCK_INSUFICIENTE") {
+          return { success: false, error: 'STOCK_INSUFICIENTE' };
         }
-        if (errorData?.error?.includes("Evento no encontrado") || errorData?.error === "EVENTO_NO_ENCONTRADO") {
+        if (errorData?.error === "EVENTO_NO_ENCONTRADO") {
           return { success: false, error: 'EVENTO_NO_ENCONTRADO' };
         }
         return { success: false, error: errorData?.error || 'Error creando el pedido' };

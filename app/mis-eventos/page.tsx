@@ -8,7 +8,7 @@ import { Ticket } from 'lucide-react'; // Sumamos un icono retro copado para el 
 
 type EventoSeller = {
   idEvento: number;
-  nombre: string;
+  nombreEvento: string;
   descripcion: string;
   fecha: string;
   categoria: string;
@@ -73,7 +73,7 @@ export default async function MisEventosPage({ searchParams }: MisEventosPagePro
         return {
           idPedido: compra.id_pedido,
           cantidadComprada: compra.cantidad,
-          nombre: infoSeller.nombre,
+          nombreEvento: infoSeller.nombreEvento,
           descripcion: infoSeller.descripcion, 
           fecha: infoSeller.fecha,
           categoria: infoSeller.categoria, 
@@ -98,7 +98,7 @@ export default async function MisEventosPage({ searchParams }: MisEventosPagePro
   if (searchTerm) {
     eventosFiltrados = eventosFiltrados.filter(
       (evento: any) =>
-        evento.nombre.toLowerCase().includes(searchTerm) ||
+        evento.nombreEvento.toLowerCase().includes(searchTerm) ||
         evento.descripcion.toLowerCase().includes(searchTerm) ||
         evento.ubicacion.toLowerCase().includes(searchTerm)
     );

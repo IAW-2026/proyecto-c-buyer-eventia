@@ -10,7 +10,7 @@ type Props = {
 
 type Evento = {
   idEvento: number;
-  nombre: string;
+  nombreEvento: string;
   descripcion: string;
   fecha: string;
   ubicacion: string;
@@ -55,7 +55,7 @@ export default async function Page({ params }: Props) {
         <section className="col-span-12 lg:col-span-6">
           <CarruselImagenes 
             imagenes={evento.imagenes} 
-            nombreEvento={evento.nombre} 
+            nombreEvento={evento.nombreEvento} 
           />
         </section>
 
@@ -66,7 +66,7 @@ export default async function Page({ params }: Props) {
           <div className="space-y-6">
             <div>
               <h1 className="text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight font-display font-bold leading-tight">
-                {evento.nombre}
+                {evento.nombreEvento}
               </h1>
             </div>
 

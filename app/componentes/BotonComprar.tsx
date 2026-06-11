@@ -38,7 +38,7 @@ type Props = {
       console.error('Server error received:', resultado.error);
       
       // Mapeamos los códigos de error controlados
-      if (resultado.error === "ENTRADAS_AGOTADAS") {
+      if (resultado.error === "STOCK_INSUFICIENTE") {
         setMensajeError("¡Lo sentimos! No hay suficientes entradas disponibles en este momento.");
       } else if (resultado.error === "EVENTO_NO_ENCONTRADO") {
         setMensajeError("El evento que intentas comprar ya no se encuentra disponible.");

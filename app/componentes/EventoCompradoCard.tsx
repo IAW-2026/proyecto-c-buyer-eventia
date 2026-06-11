@@ -4,7 +4,7 @@ import { Calendar, MapPin, Ticket } from 'lucide-react'; // 🚀 Importación li
 export type EventoComprado = {
   idPedido: number;
   cantidadComprada: number;
-  nombre: string;
+  nombreEvento: string;
   fecha: string;
   ubicacion: string;
 };
@@ -35,7 +35,7 @@ export default function EventoCompradoCard({ evento }: Props) {
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between p-1">
         <div className="flex-1">
           <h2 className="text-lg font-body font-bold text-primary tracking-tight">
-            {evento.nombre}
+            {evento.nombreEvento}
           </h2>
 
         <div className="mt-3 space-y-2 border-t border-primary/5 pt-3 font-body text-sm text-on-surface-variant/70">

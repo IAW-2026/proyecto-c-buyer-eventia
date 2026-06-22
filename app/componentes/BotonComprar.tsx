@@ -52,7 +52,8 @@ type Props = {
     }
 
     // Si sale todo bien
-    setMensajeExito({ idPedido: resultado.idPedido });
+   // setMensajeExito({ idPedido: resultado.idPedido });
+   window.location.href = `https://proyecto-c-payments-eventia.vercel.app/comprador`; // Redirige a pagar
    
   } catch (error: any) {
     if (error.message === "NEXT_REDIRECT") throw error;

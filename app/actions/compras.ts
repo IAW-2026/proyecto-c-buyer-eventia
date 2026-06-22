@@ -1,5 +1,4 @@
 'use server';
-
 import { prisma } from "@/lib/prisma";
 import { getOrCreateUser } from "./usuarios";
 import { revalidatePath } from "next/cache";
@@ -103,14 +102,6 @@ export async function comprar({
 
     const paymentData = await respuestaPayment.json();
     console.log('PAYMENT DATA:', paymentData);
-    const { idTransaccion } = paymentData;
-    console.log('ID TRANSACCION:', idTransaccion);
-    //temporalmente 
-    if (!idTransaccion) {
-     throw new Error(
-    `idTransaccion inválido: ${JSON.stringify(paymentData)}`
-    );
-}
 
     try {
     const compraGuardada = await prisma.compras.create({

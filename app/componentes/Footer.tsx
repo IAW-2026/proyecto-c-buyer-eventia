@@ -40,8 +40,8 @@ export default function Footer() {
             <Link href="/eventos" className="hover:underline transition-all">
               Eventos
             </Link>
-            <Link href="/mis-eventos" className="hover:underline transition-all">
-              Mis Eventos
+            <Link href="https://proyecto-c-seller-eventia.vercel.app/" className="hover:underline transition-all">
+              Crear eventos
             </Link>
           </nav>
         </div>

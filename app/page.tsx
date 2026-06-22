@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image'; 
-import { Ticket } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export default function Page() {
   return (
@@ -72,19 +72,19 @@ export default function Page() {
         <div className="max-w-3xl mx-auto flex flex-col items-center gap-4 relative z-10">
           {/* Título de sección h2 para mantener una jerarquía SEO impecable */}
           <h2 className="font-display font-black text-3xl md:text-display-sm text-[#fe9ea2] uppercase tracking-tight leading-none max-w-2xl">
-            Viví experiencias que dejen marca
+           Creá tu próximo evento hoy
           </h2>
           
           <p className="font-body text-sm md:text-body-lg text-background/80 font-medium max-w-md md:max-w-xl mt-2">
-            No te quedes afuera. Miles de historias, recitales y encuentros te están esperando hoy en Eventia.
+           Sumate a quienes ya gestionan sus entradas con Eventia.
           </p>
 
           <Link 
-            href="/eventos" 
+            href="https://proyecto-c-seller-eventia.vercel.app/" 
             className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-[#fe9ea2] hover:bg-[#fe9ea2]/90 text-[#650003] font-label font-bold text-sm rounded-2xl transition-all shadow-lg hover:scale-105 active:scale-95"
           >
-            <Ticket className="w-4 h-4" />
-            Explorar todos los eventos
+            <Plus className="w-4 h-4" />
+             Crear evento
           </Link>
         </div>
       </section>

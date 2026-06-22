@@ -9,11 +9,6 @@ import {usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const links = [
-	{ href: "/", label: "Home" },
-    { href: "/eventos", label: "Eventos" },
-	{ href: "/mis-eventos", label: "Mis eventos" },
-];
 
 export default function NavBar({ esAdmin }: { esAdmin: boolean }) {
 	 const { isSignedIn, userId } = useAuth();
@@ -74,6 +69,12 @@ export default function NavBar({ esAdmin }: { esAdmin: boolean }) {
       <Link href="/mis-eventos" className={getLinkClass("/mis-eventos")}>
         <Calendar className="w-4 h-4" />
         <span>Mis Eventos</span>
+      </Link>
+
+      
+      <Link href="https://proyecto-c-shipping-eventia.vercel.app/buyer" className={getLinkClass("https://proyecto-c-shipping-eventia.vercel.app/buyer")}>
+        <Ticket className="w-4 h-4" />
+        <span>Mis entradas </span>
       </Link>
 
       {esAdmin && (

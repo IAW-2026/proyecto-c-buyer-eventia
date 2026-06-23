@@ -1,7 +1,7 @@
 'use client';
 import { useTransition } from 'react'; 
+import { useRouter } from 'next/navigation';
 import { cancelarPedido } from '../actions/compras';
-import { useState } from 'react';
 
 type Props = {
   idPedido: number;
@@ -9,29 +9,27 @@ type Props = {
 
 export default function BotonDevolver({ idPedido }: Props) {
   const [isPending, startTransition] = useTransition(); //  hook  de Next.js para manejar estados de transición
-  const [error, setError] = useState<string | null>(null);
+
   const handleCancelarPedido = () => {
     if (!confirm('¿Estás seguro de que quieres cancelar este pedido?')) {
       return;
     }
-    setError(null);
+
     // startTransition agrupa todo el proceso asíncrono
     startTransition(async () => {
       try {
         const result = await cancelarPedido({ idPedido });
-
         if (!result.success) {
-          setError('Error al cancelar el pedido');
+          throw new Error('Error al cancelar el pedido');
         }
         
       } catch (error: any) {
-        setError(error.message || 'Hubo un error al cancelar');
+        alert(error.message || 'Hubo un error al cancelar');
       }
     });
   };
 
   return (
-    <div>
     <button
       onClick={handleCancelarPedido}
       disabled={isPending} // se deshabilita mientras borra  y se actualiza la página
@@ -39,11 +37,5 @@ export default function BotonDevolver({ idPedido }: Props) {
     >
       {isPending ? 'Cancelando...' : 'Devolver entradas'}
     </button>
-    {error && (
-        <div className="mt-2 rounded-md bg-red-100 px-3 py-2 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-    </div>
   );
 }

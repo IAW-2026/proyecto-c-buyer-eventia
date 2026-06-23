@@ -237,8 +237,6 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
   await prisma.compras.delete({
     where: { id_pedido: idPedido },
   });
-    revalidatePath(`/eventos/${compra.id_evento}`);
-    revalidatePath('/mis-eventos');
 
   return { success: true };
 }

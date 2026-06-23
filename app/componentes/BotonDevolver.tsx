@@ -2,6 +2,7 @@
 import { useTransition } from 'react'; 
 import { cancelarPedido } from '../actions/compras';
 import { useState } from 'react';
+import { revalidatePath } from 'next/cache';
 
 type Props = {
   idPedido: number;
@@ -20,6 +21,7 @@ export default function BotonDevolver({ idPedido }: Props) {
     startTransition(async () => {
       try {
         const result = await cancelarPedido({ idPedido });
+        revalidatePath('/mis-eventos');
         if (!result.success) {
           setError('Error al cancelar el pedido');
         }

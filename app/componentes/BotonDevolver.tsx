@@ -2,7 +2,7 @@
 import { useTransition } from 'react'; 
 import { cancelarPedido } from '../actions/compras';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+//import { useRouter } from 'next/navigation';
 
 type Props = {
   idPedido: number;
@@ -11,7 +11,7 @@ type Props = {
 export default function BotonDevolver({ idPedido }: Props) {
   const [isPending, startTransition] = useTransition(); //  hook  de Next.js para manejar estados de transición
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  //const router = useRouter();
   const handleCancelarPedido = () => {
     if (!confirm('¿Estás seguro de que quieres cancelar este pedido?')) {
       return;
@@ -25,7 +25,7 @@ export default function BotonDevolver({ idPedido }: Props) {
         if (!result.success) {
           setError('Error al cancelar el pedido');
         }else {
-          router.refresh(); 
+        //  router.refresh(); 
         }
         
       } catch (error: any) {

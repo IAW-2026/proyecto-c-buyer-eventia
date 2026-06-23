@@ -234,7 +234,7 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
     throw new Error(`Error al cancelar el pedido en el sistema de shipping: ${errorMessage}`);
   }
   //Eliminar el registro de compra de la base de datos
-  await prisma.compras.delete({
+  await prisma.compras.deleteMany({
     where: { id_pedido: idPedido },
   });
     revalidatePath(`/eventos/${compra.id_evento}`);

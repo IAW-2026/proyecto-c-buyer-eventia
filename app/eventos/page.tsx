@@ -1,6 +1,7 @@
 import EventoCard from "../componentes/EventoCard";
 import Paginacion from "../componentes/Paginacion";
 import BusquedaFiltro from "../componentes/BusquedaFiltro";
+import BotonVolver from "../componentes/BotonVolver";
 
 type Evento = {
   idEvento: number;
@@ -131,6 +132,7 @@ if (fechaFin) {
 console.log("Total de páginas calculadas:", totalPaginas);
   return (
    <main className="layout-container">
+    <BotonVolver />
     <h1 className="text-headline-lg-mobile md:text-headline-lg text-secondary mb-8">
       Eventos
     </h1>

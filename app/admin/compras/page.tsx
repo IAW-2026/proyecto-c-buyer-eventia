@@ -5,6 +5,7 @@ import { isAdminBuyer } from '@/lib/admin';
 import AdminTablaCompras from '@/app/componentes/AdminTablaCompras';
 import Paginacion from '@/app/componentes/Paginacion';
 import {ShoppingBag} from 'lucide-react';
+import BotonVolver from '@/app/componentes/BotonVolver';
 
 type EventoSeller = {
   idEvento: number;
@@ -171,6 +172,7 @@ export default async function ComprasPage({ searchParams }: PageProps) {
   
    return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10 bg-background text-on-background">
+      <BotonVolver />
       {/* Header */}
       <div className="flex flex-col gap-1 border-b border-primary/10 pb-5">
      <span className="inline-flex items-center gap-1 text-on-secondary-container text-label-sm font-bold uppercase tracking-widest bg-secondary-container px-2.5 py-0.5 rounded-full w-fit">

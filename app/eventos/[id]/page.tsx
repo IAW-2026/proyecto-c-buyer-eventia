@@ -2,6 +2,7 @@ import BotonComprar from '@/app/componentes/BotonComprar';
 import { notFound } from 'next/navigation';
 import { CalendarDays, MapPin, Ticket } from 'lucide-react';
 import CarruselImagenes from '@/app/componentes/Carrusel';
+import BotonVolver from '@/app/componentes/BotonVolver';
 type Props = {
   params: Promise<{
     id: string;
@@ -48,8 +49,15 @@ export default async function Page({ params }: Props) {
   }
 
   return (
-     <main className="layout-container flex items-start justify-center pt-8 md:pt-12">
-      <article className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl">
+     
+    <main className="layout-container flex flex-col items-center pt-8 md:pt-12">
+    
+    {/* Botón volver arriba de todo */}
+    <div className="w-full max-w-7xl mb-4">
+      <BotonVolver />
+    </div>
+
+    <article className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl">
         
         {/* SECCIÓN IZQUIERDA: CARRUSEL DE IMÁGENES */}
         <section className="col-span-12 lg:col-span-6">

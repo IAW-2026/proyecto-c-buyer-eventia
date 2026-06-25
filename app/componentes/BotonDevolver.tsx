@@ -31,9 +31,15 @@ export default function BotonDevolver({ idPedido }: Props) {
     startTransition(async () => {
       try {
         const result = await cancelarPedido({ idPedido });
-        
-        if (!result || !result.success) {
-          throw new Error('Error al cancelar el pedido');
+  
+         if (!result.success) {
+          const msg = result.error || '';
+          if (msg.startsWith('PAYMENTS_ERROR:409')) {
+            setError('No se pueden devolver las entradas porque el pago aún no está aprobado.');
+          } else {
+            setError('Error en el sistema de pagos.');
+          }
+          return;
         }
         
         setMensajeExito('¡Entradas devueltas exitosamente!');

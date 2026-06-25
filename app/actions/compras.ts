@@ -200,17 +200,9 @@ export async function cancelarPedido({ idPedido }: { idPedido: number }) {
   });
   
   if (!cancelarPaymentsRes.ok) {
-    let errorMessage = 'Error al cancelar el pedido en el sistema de pagos';
-    const contentType = cancelarPaymentsRes.headers.get('Content-Type');
-    if (contentType && contentType.includes('application/json')) {
-      const errorData = await cancelarPaymentsRes.json();
-      // Payments usa "error", no "message"
-      errorMessage = errorData.error || errorData.message || errorMessage;
-    }
-    //console.error('Error de la API de Payments durante la cancelación:', errorMessage);
-     // Propagamos el status para poder detectarlo en el cliente
-     throw new Error(`PAYMENTS_ERROR:${cancelarPaymentsRes.status}:${errorMessage}`);
-   // throw new Error(`Error al cancelar el pedido en el sistema de pagos: ${errorMessage}`);
+    const errorData = await cancelarPaymentsRes.json().catch(() => ({}));
+    const detalle = errorData.error || errorData.message || cancelarPaymentsRes.statusText;
+    return { success: false, error: `PAYMENTS_ERROR:${cancelarPaymentsRes.status}:${detalle}` };
   }
 
   // API de Shipping para cancelar entradas

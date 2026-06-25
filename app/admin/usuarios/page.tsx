@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { isAdminBuyer } from '@/lib/admin';
 import { redirect } from 'next/navigation';
 import { Users } from 'lucide-react';
+import BotonVolver from '@/app/componentes/BotonVolver';
 
 export default async function Page() {
   // Verificación de seguridad
@@ -21,6 +22,7 @@ export default async function Page() {
 
   return (
    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10 bg-background text-on-background">
+    <BotonVolver />
       {/* Encabezado Estilizado */}
       <div className="flex flex-col gap-1 border-b border-primary/10 pb-5">
         <span className="inline-flex items-center gap-1 text-on-secondary-container text-label-sm font-bold uppercase tracking-widest bg-secondary-container px-2.5 py-0.5 rounded-full w-fit">

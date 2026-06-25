@@ -112,7 +112,7 @@ export default async function AdminPage() {
       </div>
 
       {/*  SECCIÓN: INDICADORES CLAVE  */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
         
         {/*  Total Pedidos */}
         <div className="card-retro bg-surface-container-lowest flex flex-col justify-between group">
@@ -148,24 +148,6 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* KPI: Entorno de Pruebas Sandbox */}
-        <div className="card-retro-tonal bg-secondary-container/10 flex flex-col justify-between border-secondary/20">
-          <div className="flex items-start justify-between">
-            <div className="flex flex-col gap-1">
-              <span className="chip-retro w-fit bg-primary-container text-background text-[10px]">Nuestra api</span>
-              <h3 className="font-body font-bold text-lg text-primary mt-2">Simulador de API</h3>
-              <p className="text-label-sm text-on-surface-variant opacity-85 mt-0.5">
-                Herramientas de testing para simular peticiones del ecosistema.
-              </p>
-            </div>
-            <div className="p-2.5 rounded-xl bg-primary-container/10 text-primary-container">
-              <Terminal className="w-5 h-5" />
-            </div>
-          </div>
-          <Link href="/admin/simulacion" className="btn-retro-secondary mt-4 w-full flex items-center justify-center gap-2 text-center text-xs py-2.5">
-            Lanzar Simulador <ArrowUpRight className="w-4 h-4" />
-          </Link>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

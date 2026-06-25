@@ -42,7 +42,21 @@ export default function BotonDevolver({ idPedido }: Props) {
         setTimeout(() => setMensajeExito(null), 4000);
 
       } catch (err: any) {
-        setError(err.message || 'Hubo un error al cancelar');
+       const msg: string = err.message || '';
+
+      // Detectamos el prefijo que pusimos en la server action
+      if (msg.startsWith('PAYMENTS_ERROR:')) {
+        const [, status, ...rest] = msg.split(':');
+        const detalle = rest.join(':');
+
+        if (status === '409') {
+          setError('No se pueden devolver las entradas porque el pago aún no está aprobado.');
+        } else {
+          setError(`Error en el sistema de pagos: ${detalle}`);
+        }
+      } else {
+        setError(msg || 'Hubo un error al cancelar');
+      }
       }
     });
   };

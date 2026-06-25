@@ -35,7 +35,7 @@ export default function BotonDevolver({ idPedido }: Props) {
          if (!result.success) {
           const msg = result.error || '';
           if (msg.startsWith('PAYMENTS_ERROR:409')) {
-            setError('No se pueden devolver las entradas porque el pago aún no está aprobado.');
+            setError('No se pueden devolver las entradas porque el pago no fue aprobado.');
           } else {
             setError('Error en el sistema de pagos.');
           }

@@ -1,10 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { isAdminBuyer } from '@/lib/admin';
-import { redirect } from 'next/navigation';
 import { Users } from 'lucide-react';
 import BotonVolver from '@/app/componentes/BotonVolver';
+import Paginacion from '@/app/componentes/Paginacion';
 
-export default async function Page() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
   // Verificación de seguridad
   const admin = await isAdminBuyer();
   if (!admin) {
@@ -16,9 +20,24 @@ export default async function Page() {
     </main>
      );
   }
+   
+  const params = await searchParams;
+  const pagina = Number(params.page) || 1;
+  const usuariosPorPagina = 4;
+
+  const totalUsuarios = await prisma.usuarios.count();
+  const totalPaginas = Math.ceil(totalUsuarios / usuariosPorPagina);
 
   // Consulta a la base de datos
-  const usuarios = await prisma.usuarios.findMany();
+
+  const usuarios = await prisma.usuarios.findMany({
+    skip: (pagina - 1) * usuariosPorPagina,
+    take: usuariosPorPagina,
+    orderBy: {
+      nombre_usuario: "asc",
+    },
+  });
+
 
   return (
    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-10 bg-background text-on-background">
@@ -66,6 +85,11 @@ export default async function Page() {
           </tbody>
         </table>
       </div>
+      
+      <div className="flex justify-center">
+        <Paginacion totalPaginas={totalPaginas} />
+      </div>
+
     </main>
   );
 }

@@ -5,6 +5,7 @@ import EventoCompradoCard from "../componentes/EventoCompradoCard";
 import Paginacion from '../componentes/Paginacion';
 import BusquedaFiltro from '../componentes/BusquedaFiltro';
 import { Ticket } from 'lucide-react'; // Sumamos un icono retro copado para el banner
+import BotonVolver from '../componentes/BotonVolver';
 
 type EventoSeller = {
   idEvento: number;
@@ -134,6 +135,7 @@ export default async function MisEventosPage({ searchParams }: MisEventosPagePro
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-10 gap-8 bg-background">
+      <BotonVolver />
       <div className="w-full space-y-8">
 
         {/* Banner */}
